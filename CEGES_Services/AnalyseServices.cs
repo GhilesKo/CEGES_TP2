@@ -15,6 +15,7 @@ namespace CEGES_Services
     public class AnalyseServices : IAnalyseServices
     {
         IUnitOfWork _uow;
+
         private readonly UserManager<ApplicationUser> _userManager;
 
         public AnalyseServices(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
