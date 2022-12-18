@@ -15,6 +15,6 @@ namespace CEGES_Core
         public int EquipementsCount { get; set; }
         [NotMapped]
         public int PeriodesCount { get; set; }
-        public List<ApplicationUser> Analystes { get; set; }
+        public List<ApplicationUser> Analystes { get; set; } = new();
     }
 }

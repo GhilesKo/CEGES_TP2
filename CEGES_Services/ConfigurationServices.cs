@@ -82,6 +82,11 @@ namespace CEGES_Services
             return _uow.Entreprises.GetEntreprisesAndCounts().ToList();
         }
 
+        public List<ListeEntreprisesVM> GetAnalysteEntreprisesAndCountsAsync(string userId)
+        {
+            return _uow.Entreprises.GetAnalysteEntreprisesAndCountsAsync(userId).ToList();
+        }
+
         public async Task<Equipement> GetEquipementDetailAsync(int id)
         {
             IEnumerable<Equipement> equipements = await _uow.Equipements.GetAllAsync(e => e.Id == id, null, "Groupe");

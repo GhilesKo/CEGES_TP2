@@ -52,6 +52,7 @@ namespace CEGES_MVC.Areas.Configuration.Controllers
                 vm.Entreprise = await _services.Configuration.GetEntrepriseAsync(id.GetValueOrDefault());
             }
             IEnumerable<ApplicationUser> users = await _services.Analyse.GetAnalystesListAsync();
+
             vm.Analystes = users.Select(u => new SelectListItem(u.NormalizedUserName, u.Id, vm.Entreprise.Analystes.Exists(a => a.Id == u.Id))).ToList();
 
             if (vm.Entreprise == null)

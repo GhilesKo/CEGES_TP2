@@ -8,6 +8,8 @@ namespace CEGES_Services.IServices
     public interface IConfigurationServices
     {
         public List<ListeEntreprisesVM> GetEntreprisesAndCountsAsync();
+        public List<ListeEntreprisesVM> GetAnalysteEntreprisesAndCountsAsync(string userId);
+
         public Task<DetailEntrepriseVM> GetEntrepriseDetailAsync(int id);
         public Task<Entreprise> GetEntrepriseAsync(int id);
         public Task AddEntrepriseAsync(Entreprise entreprise);

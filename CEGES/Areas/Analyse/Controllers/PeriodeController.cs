@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CEGES_MVC.Areas.Analyse.Controllers
 {
@@ -18,9 +20,9 @@ namespace CEGES_MVC.Areas.Analyse.Controllers
     public class PeriodeController : Controller
     {
         private readonly ICegesServices _services;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PeriodeController(ICegesServices services, UserManager<IdentityUser> userManager)
+        public PeriodeController(ICegesServices services, UserManager<ApplicationUser> userManager)
         {
             _services = services;
             _userManager = userManager;
@@ -30,23 +32,24 @@ namespace CEGES_MVC.Areas.Analyse.Controllers
         public async Task<IActionResult> IndexAsync()
         {
 
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
 
+            var user = await _userManager.GetUserAsync(User);
 
+            List<ListeEntreprisesVM> vm;
 
-            List<ListeEntreprisesVM> vm = _services.Configuration.GetEntreprisesAndCountsAsync();
-
+            //check if user is an ANALYSTE
             if (await _userManager.IsInRoleAsync(user, AppConstants.AnalysteRole))
             {
-                foreach (var entreprise in vm)
-                {
-                    foreach (var item in collection)
-                    {
 
-                    }
-                }
+                //return only the entreprises he belongs 
+                vm = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId);
+                return View(vm);
 
             }
+
+            //user is a INGENIEUR, returns all entreprises
+            vm = _services.Configuration.GetEntreprisesAndCountsAsync();
 
             return View(vm);
         }

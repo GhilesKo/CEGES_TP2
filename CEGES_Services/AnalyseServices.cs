@@ -2,6 +2,8 @@
 using CEGES_Core.IRepository;
 using CEGES_Core.ViewModels;
 using CEGES_Services.IServices;
+using CEGES_Util;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -13,10 +15,12 @@ namespace CEGES_Services
     public class AnalyseServices : IAnalyseServices
     {
         IUnitOfWork _uow;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AnalyseServices(IUnitOfWork unitOfWork)
+        public AnalyseServices(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             _uow = unitOfWork;
+            _userManager = userManager;
         }
 
 
@@ -189,7 +193,8 @@ namespace CEGES_Services
 
         public async Task<IEnumerable<ApplicationUser>> GetAnalystesListAsync()
         {
-            return await _uow.Users.GetAllAsync("Entreprises");
+            return await _userManager.GetUsersInRoleAsync(AppConstants.AnalysteRole);
+            //return await _uow.Users.GetAllAsync();
         }
     }
 }

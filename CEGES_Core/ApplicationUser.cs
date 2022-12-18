@@ -7,6 +7,6 @@ namespace CEGES_Core
 {
     public class ApplicationUser : IdentityUser
     {
-        public List<Entreprise> Entreprises { get; set; }
+        public List<Entreprise> Entreprises { get; set; } = new();
     }
 }

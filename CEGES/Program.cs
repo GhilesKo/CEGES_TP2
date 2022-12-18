@@ -27,8 +27,9 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICegesServices, CegesServices>();
 //builder.Services.AddTransient<UserManager<ApplicationUser>>();
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                .AddDefaultTokenProviders()
+
                .AddDefaultUI()
                .AddEntityFrameworkStores<CegesDbContext>();
 
