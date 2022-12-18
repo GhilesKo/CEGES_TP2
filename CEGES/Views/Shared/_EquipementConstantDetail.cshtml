@@ -1,0 +1,2 @@
+﻿@model CEGES_Core.EquipementConstant
+@await Html.PartialAsync("_DetailInfo", new DetailInfoVM("Émissions", Model.Emissions.RoundToSignificantDigits(3) + " t/j"))

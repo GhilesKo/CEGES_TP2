@@ -1,0 +1,11 @@
+﻿@model CEGES_Core.EquipementConstant
+
+<div class="form-group row">
+    <div class="col-4">
+        <label asp-for="Nom"></label>
+    </div>
+    <div class="col-8">
+        <input asp-for="Emissions" class="form-control" /> (en tonnes par jour)
+        <span asp-validation-for="Emissions" class="text-danger"></span>
+    </div>
+</div>

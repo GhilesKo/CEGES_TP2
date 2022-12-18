@@ -1,0 +1,3 @@
+﻿@model CEGES_Core.EquipementRelatif
+@await Html.PartialAsync("_DetailInfo", new DetailInfoVM("Minimum (0%)", Model.Minimum.RoundToSignificantDigits(3) + " t/j"))
+@await Html.PartialAsync("_DetailInfo", new DetailInfoVM("Maximum (100%)", Model.Maximum.RoundToSignificantDigits(3) + " t/j"))

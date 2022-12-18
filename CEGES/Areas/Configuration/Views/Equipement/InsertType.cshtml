@@ -1,0 +1,42 @@
+﻿@model Groupe
+@{
+    ViewData["Title"] = Model.Nom;
+}
+
+<h3>
+    Ajouter un équipement au groupe
+</h3>
+<div>
+    Veuillez sélectionner le type d'équipement que vous souhaitez ajouter. Ce type ne pourra ensuite plus être changé.
+</div>
+
+@{
+    <div class="row">
+        @foreach (EquipementType type in Enum.GetValues(typeof(EquipementType)))
+        {
+            <div class="col mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <p class="card-title h5 text-center"><b style="color:#2c3e50">@type.GetDisplayName()</b></p>
+                        <div class="card-block">
+                            <small>
+                                @await Html.PartialAsync("_Equipement" + type.ToString() + "Help")
+                            </small>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a asp-controller="Equipement" asp-action="Insert" class="btn btn-primary form-control" asp-route-id="@Model.Id" asp-route-type="@type.ToString()">Choisir ce type</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+}
+<div class="row pb-3 backgroundWhite">
+    <div class="col-4 pb-2 align-items-end">
+        <a asp-area="Configuration" asp-controller="Groupe" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary  col-10">
+            <i class="fas fa-plus-circle"></i> &nbsp;Retour à @Model.Nom
+        </a>
+    </div>
+</div>

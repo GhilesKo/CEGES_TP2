@@ -1,0 +1,20 @@
+﻿@model CEGES_Core.EquipementLineaire
+
+<div class="form-group row">
+    <div class="col-4">
+        <label asp-for="UniteMesure"></label>
+    </div>
+    <div class="col-8">
+        <input asp-for="UniteMesure" class="form-control" />
+        <span asp-validation-for="UniteMesure" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-4">
+        <label asp-for="FacteurConversion"></label>
+    </div>
+    <div class="col-8">
+        <input asp-for="FacteurConversion" class="form-control" /> (en tonnes par <i>unité de mesure</i>)
+        <span asp-validation-for="FacteurConversion" class="text-danger"></span>
+    </div>
+</div>

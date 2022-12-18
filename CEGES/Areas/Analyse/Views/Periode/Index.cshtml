@@ -1,0 +1,42 @@
+﻿@model List<ListeEntreprisesVM>
+@{
+    ViewData["Title"] = "Analyse des entreprises";
+}
+<h3>
+    Liste des entreprises
+</h3>
+<div class="row">
+    @foreach (var entreprise in Model)
+    {
+        <div class="col mb-4">
+            <div class="card h-100" style="min-width: 15rem; max-width: 18rem;">
+                <img src="/images/entreprise.png" class="card-img-top rounded" />
+                <div class="card-body">
+                    <p class="card-title h5 text-center"><b style="color:#2c3e50">@entreprise.Nom</b></p>
+                    <div class="card-block">
+                        @await Html.PartialAsync("_DetailInfo", new DetailCountVM("Période", entreprise.Periodes, "s", "Aucune"))
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a asp-action="Liste" class="card-link" asp-route-id="@entreprise.Id">Details</a>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="col mb-4">
+        <div class="card h-100" style="min-width: 15rem; max-width: 18rem;">
+            <img src="/images/entreprise.png" class="card-img-top rounded" style="opacity: 0.25" />
+            <div class="card-body">
+                <p class="card-title h5 text-center"><b style="color:#2c3e50">&nbsp;</b></p>
+                <div class="card-block">
+                    <div class="row">
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <a asp-action="Upsert" class="btn btn-secondary form-control">Ajouter</a>
+            </div>
+        </div>
+    </div>
+</div>

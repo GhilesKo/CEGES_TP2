@@ -1,0 +1,111 @@
+﻿@model ListeMesuresVM
+@{
+    string titre = Model.PeriodeNom;
+    ViewData["Title"] = titre;
+}
+
+<h3>
+    @titre
+    <small class="text-muted">(@Model.EntrepriseNom)</small>
+</h3>
+
+<form asp-action="Upsert" method="post" enctype="multipart/form-data">
+    <input asp-for="EntrepriseId" hidden />
+    <input asp-for="EntrepriseNom" hidden />
+    <input asp-for="PeriodeId" hidden />
+    <input asp-for="PeriodeNom" hidden />
+    <input asp-for="PeriodeDebut" value="@Model.PeriodeDebut.ToString("yyyy-MM-ddTHH:mm")" hidden />
+    @{ string groupe = ""; }
+    <div class="list-group list-group-flush">
+        @for (int i = 0; i < Model.Mesures.Count(); i++)
+        {
+            DetailMesureVM mesure = Model.Mesures[i];
+            @if (mesure.Groupe != groupe)
+            {
+                groupe = mesure.Groupe;
+                <div class="list-group-item active mt-3">
+                    @groupe
+                </div>
+                <div class="list-group-item">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-6 font-weight-bold">
+                                    Nom de l'équipement
+                                </div>
+                                <div class="col-6">
+                                    Type de l'équipement
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    Formule
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            Mesure
+                        </div>
+                        <div class="col-3">
+                            Émissions mensuelles
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="list-group-item">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-6 font-weight-bold">
+                                @mesure.Equipement
+                            </div>
+                            <div class="col-6">
+                                @mesure.Type
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                @mesure.Formule
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <input type="hidden" asp-for="Mesures[i].Id" value="@mesure.Id" />
+                        <input type="hidden" asp-for="Mesures[i].EquipementId" value="@mesure.EquipementId" />
+                        @if (mesure.Type == "Constant")
+                        {
+                            <input type="hidden" asp-for="Mesures[i].Mesure" value="0" />
+                        }
+                        else
+                        {
+                            <input type="text" asp-for="Mesures[i].Mesure" value="@mesure.Mesure.RoundToSignificantDigits(3)" /> @mesure.UniteMesure
+                        }
+                    </div>
+                    <div class="col-3">&nbsp;</div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="form-group row mt-3">
+        <div class="col-4 offset-4">
+            @if (Model.PeriodeId != 0)
+            {
+                //update
+                <div class="col">
+                    <input type="submit" class="btn btn-info w-100" value="Enregistrer" />
+                </div>
+            }
+            else
+            {
+                //create
+                <div class="col">
+                    <input type="submit" class="btn btn-primary w-100" value="Ajouter la période" />
+                </div>
+            }
+        </div>
+        <div class="col-4">
+            <a asp-action="Liste" asp-route-id="@Model.EntrepriseId" class="btn btn-secondary w-100"><i class="fas fa-sign-out-alt"></i> Retour à @Model.EntrepriseNom</a>
+        </div>
+    </div>
+</form>

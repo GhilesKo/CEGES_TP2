@@ -1,0 +1,2 @@
+﻿@model CEGES_Core.EquipementLineaire
+@await Html.PartialAsync("_DetailInfo", new DetailInfoVM("Facteur de conversion", Model.FacteurConversion.RoundToSignificantDigits(3) + " " + Model.UniteMesure))

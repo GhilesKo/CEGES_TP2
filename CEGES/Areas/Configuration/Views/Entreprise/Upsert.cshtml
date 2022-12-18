@@ -1,0 +1,68 @@
+﻿@model UpsertEntrepriseVM
+@{
+    if (Model.Entreprise.Id == 0)
+    {
+        ViewData["Title"] = "Ajouter une entreprise";
+    }
+    else
+    {
+        ViewData["Title"] = "Modifier une entreprise";
+    }
+}
+
+<form method="post" enctype="multipart/form-data">
+    @if (Model.Entreprise.Id != 0)
+    {
+        <input asp-for="Entreprise.Id" hidden />}
+    <div class="border p-3">
+        <div class="form-group row">
+            <h2 class="text-info pl-3">@ViewData["Title"]</h2>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Entreprise.Nom"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Entreprise.Nom" class="form-control" />
+                        <span asp-validation-for="Entreprise.Nom" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Entreprise.Analystes"></label>
+                    </div>
+                    <div class="col-8">
+                        @Html.ListBoxFor(e => e.SelectAnalystes, Model.Analystes, new { @class = "listbox" })
+                        <span asp-validation-for="Entreprise.Nom" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-8 offset-4 row">
+                        @if (Model.Entreprise.Id != 0)
+                        {
+                            //update
+                            <div class="col">
+                                <input type="submit" class="btn btn-info w-100" value="Enregistrer" />
+                            </div>
+                            <div class="col">
+                                <a asp-action="Details" asp-route-id="@Model.Entreprise.Id" class="btn btn-secondary w-100"><i class="fas fa-sign-out-alt"></i> Retour</a>
+                            </div>
+                        }
+                        else
+                        {
+                            //create
+                            <div class="col">
+                                <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100" value="Ajouter" />
+                            </div>
+                            <div class="col">
+                                <a asp-action="Index" class="btn btn-secondary w-100"><i class="fas fa-sign-out-alt"></i> Retour</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

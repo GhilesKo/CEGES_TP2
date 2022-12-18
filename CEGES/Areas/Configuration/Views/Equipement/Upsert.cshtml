@@ -1,0 +1,88 @@
+﻿@model Equipement
+@{
+    if (Model.Id == 0)
+    {
+        ViewData["Title"] = "Ajouter un équipement";
+    }
+    else
+    {
+        ViewData["Title"] = "Modifier un équipement";
+    }
+}
+
+    <form method="post" enctype="multipart/form-data" asp-action="Upsert">
+        @if (Model.Id != 0)
+        {
+            <input asp-for="Id" hidden />
+        }
+        <input asp-for="GroupeId" hidden />
+        <input asp-for="Type" hidden />
+        <div class="border p-3">
+            <div class="form-group row">
+                <h2 class="text-info pl-3">@ViewData["Title"]</h2>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <div class="form-group row">
+                        <div class="col-4">
+                            <label asp-for="Groupe"></label>
+                        </div>
+                        <div class="col-8">
+                            @Model.Groupe.Nom
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-4">
+                            <label asp-for="Nom"></label>
+                        </div>
+                        <div class="col-8">
+                            <input asp-for="Nom" class="form-control" />
+                            <span asp-validation-for="Nom" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-4">
+                            <label asp-for="Type"></label>
+                        </div>
+                        <div class="col-8">
+                            @Model.Type.GetDisplayName()
+                            <span asp-validation-for="Type" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <partial name="@("_Equipement" + Model.Type.ToString() + "Upsert")" />
+                    <div class="form-group row">
+                        <div class="col-8 offset-4 row">
+
+                            @if (Model.Id != 0)
+                            {
+                                //update
+                                <div class="col">
+                                    <input type="submit" class="btn btn-info w-100" value="Enregistrer" />
+                                </div>
+                                <div class="col">
+                                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary  col-10">
+                                        <i class="fas fa-plus-circle"></i> &nbsp;Retour
+                                    </a>
+                                </div>
+                            }
+                            else
+                            {
+                                //create
+                                <div class="col">
+                                    <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100" value="Ajouter" />
+                                </div>
+                                <div class="col">
+                                    <a asp-controller="Groupe" asp-action="Details" asp-route-id="@Model.GroupeId" class="btn btn-secondary  col-10">
+                                        <i class="fas fa-plus-circle"></i> &nbsp;Retour
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    @await Html.PartialAsync("_Equipement" + Model.Type.ToString() + "Help", Model)
+                </div>
+            </div>
+        </div>
+    </form>
