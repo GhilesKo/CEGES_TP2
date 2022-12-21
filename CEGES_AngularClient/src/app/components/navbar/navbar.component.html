@@ -1,0 +1,12 @@
+<nav>
+  <h1>CEGES</h1>
+  <div class="actions">
+    <div *ngIf="!(authService.isLoggedIn$ | async); else loggedOut">
+      <button mat-raised-button color="primary" routerLink="/login">Login</button>
+      <!-- <button mat-raised-button color="primary" routerLink="/register">Register</button> -->
+    </div>
+    <ng-template #loggedOut>
+      <button mat-raised-button color="primary" (click)="logout()">Logout</button>
+    </ng-template>
+  </div>
+</nav>

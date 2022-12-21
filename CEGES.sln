@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CEGES_MVC", "CEGES\CEGES_MVC.csproj", "{0878DC9C-6B71-47F8-AE79-E4B38BC02930}"
 EndProject
@@ -17,7 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CEGES_DataAccess_Tests", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CEGES_MVC_Tests", "CEGES_Tests\CEGES_MVC_Tests.csproj", "{279CBFC3-816E-415B-A1E1-E43DB8E1B84A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CEGES_Services_Tests", "CEGES_Services_Tests\CEGES_Services_Tests.csproj", "{966045B9-3B6E-4AD4-9B5A-2E60A041E248}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CEGES_Services_Tests", "CEGES_Services_Tests\CEGES_Services_Tests.csproj", "{966045B9-3B6E-4AD4-9B5A-2E60A041E248}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CEGES_API", "CEGES_API\CEGES_API.csproj", "{20BFBA11-74A8-44BF-B6FE-974EE9038DDC}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "CEGES_AngularClient", "CEGES_AngularClient\CEGES_AngularClient.esproj", "{A33FEE5A-7B09-4BDA-A7A7-9E16148D9990}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +61,16 @@ Global
 		{966045B9-3B6E-4AD4-9B5A-2E60A041E248}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{966045B9-3B6E-4AD4-9B5A-2E60A041E248}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{966045B9-3B6E-4AD4-9B5A-2E60A041E248}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20BFBA11-74A8-44BF-B6FE-974EE9038DDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20BFBA11-74A8-44BF-B6FE-974EE9038DDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20BFBA11-74A8-44BF-B6FE-974EE9038DDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20BFBA11-74A8-44BF-B6FE-974EE9038DDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A33FEE5A-7B09-4BDA-A7A7-9E16148D9990}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A33FEE5A-7B09-4BDA-A7A7-9E16148D9990}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A33FEE5A-7B09-4BDA-A7A7-9E16148D9990}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{A33FEE5A-7B09-4BDA-A7A7-9E16148D9990}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A33FEE5A-7B09-4BDA-A7A7-9E16148D9990}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A33FEE5A-7B09-4BDA-A7A7-9E16148D9990}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

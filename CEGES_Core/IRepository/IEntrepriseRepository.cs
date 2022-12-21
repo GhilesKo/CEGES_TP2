@@ -1,5 +1,7 @@
-﻿using CEGES_Core.ViewModels;
+﻿using CEGES_Core.DTOs;
+using CEGES_Core.ViewModels;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CEGES_Core.IRepository
 {
@@ -10,6 +12,7 @@ namespace CEGES_Core.IRepository
         public IEnumerable<ListeEntreprisesVM> GetEntreprisesAndCounts();
         public IEnumerable<ListeEntreprisesVM> GetAnalysteEntreprisesAndCountsAsync(string userId);
 
+        public Task<EntrepriseSommaire> GetEntrepriseStatistiquesSommaire(int entrepriseId);
 
-    }
+	}
 }

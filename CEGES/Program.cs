@@ -16,34 +16,32 @@ using CEGES_Core;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews()
-.Services.AddDbContext<CegesDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
+builder.Services.AddControllersWithViews();
 
+builder.Services.AddDbContext<CegesDbContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICegesServices, CegesServices>();
-//builder.Services.AddTransient<UserManager<ApplicationUser>>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-               .AddDefaultTokenProviders()
-
-               .AddDefaultUI()
-               .AddEntityFrameworkStores<CegesDbContext>();
+			   .AddDefaultTokenProviders()
+			   .AddDefaultUI()
+			   .AddEntityFrameworkStores<CegesDbContext>();
 
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    // Default Password settings.
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 3;
-    options.Password.RequiredUniqueChars = 1;
+	// Default Password settings.
+	options.Password.RequireDigit = false;
+	options.Password.RequireLowercase = false;
+	options.Password.RequireNonAlphanumeric = false;
+	options.Password.RequireUppercase = false;
+	options.Password.RequiredLength = 3;
+	options.Password.RequiredUniqueChars = 1;
 });
 
 builder.Services.AddRazorPages();
@@ -53,13 +51,13 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
+	app.UseDeveloperExceptionPage();
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+	app.UseExceptionHandler("/Home/Error");
+	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+	app.UseHsts();
 }
 
 SeedDatabase();
@@ -72,26 +70,26 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "Configuration",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-    );
+	name: "Configuration",
+	pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+	);
 
 app.MapAreaControllerRoute(
-    name: "default",
-    areaName: "Configuration",
-    pattern: "{controller=Home}/{action=Index}/{id?}"
-    );
+	name: "default",
+	areaName: "Configuration",
+	pattern: "{controller=Home}/{action=Index}/{id?}"
+	);
 
-app .MapRazorPages();
+app.MapRazorPages();
 
 app.Run();
 
 
 void SeedDatabase() //can be placed at the very bottom under app.Run()
 {
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
-        dbInitializer.Initialize();
-    }
+	using (var scope = app.Services.CreateScope())
+	{
+		var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+		dbInitializer.Initialize();
+	}
 }

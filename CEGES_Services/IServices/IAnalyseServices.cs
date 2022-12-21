@@ -1,6 +1,6 @@
 ﻿using CEGES_Core;
+using CEGES_Core.DTOs;
 using CEGES_Core.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,5 +17,7 @@ namespace CEGES_Services.IServices
         public Task<ListeMesuresVM> NewPeriodeAsync(int entrepriseId, DateTime periodeDebut);
         public Task<Periode> UpsertPeriodeAsync(ListeMesuresVM vm);
         public Task<IEnumerable<ApplicationUser>> GetAnalystesListAsync();
+
+        public Task<EntrepriseSommaire> GetEntrepriseStatistiquesSommaire(int entrepriseId);
     }
 }

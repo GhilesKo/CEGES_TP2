@@ -1,10 +1,12 @@
 ﻿using CEGES_Core;
+using CEGES_Core.DTOs;
 using CEGES_Core.IRepository;
 using CEGES_Core.ViewModels;
 using CEGES_DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CEGES_DataAccess.Repository
 {
@@ -58,5 +60,28 @@ namespace CEGES_DataAccess.Repository
 
             return user.EntreprisesVMs;
         }
-    }
+
+		public async Task<EntrepriseSommaire> GetEntrepriseStatistiquesSommaire(int entrepriseId)
+        {
+			return await _db.Entreprises
+			.Include(e => e.Groupes)
+			.ThenInclude(g => g.Equipements)
+			.ThenInclude(e => e.Mesures)
+			.Where(e => e.Id == entrepriseId)
+			.Select(e => new EntrepriseSommaire
+			{
+
+				Nom = e.Nom,
+				Total = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures).Select(m => m.Valeur).Sum(),
+				Groupes = e.Groupes.Take(10).Select(g => new GroupeSommaire
+				{
+					Id = g.Id,
+					Nom = g.Nom,
+					Total = g.Equipements.SelectMany(e => e.Mesures).Select(m => m.Valeur).Sum()
+				})
+			})
+			.FirstOrDefaultAsync();
+
+		}
+	}
 }

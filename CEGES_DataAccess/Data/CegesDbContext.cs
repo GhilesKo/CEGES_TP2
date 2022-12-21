@@ -32,8 +32,7 @@ namespace CEGES_DataAccess.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<ApplicationUser>()
-                .Navigation(e => e.Entreprises).AutoInclude();
+    
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(CegesDbContext).Assembly);
         }
     }
