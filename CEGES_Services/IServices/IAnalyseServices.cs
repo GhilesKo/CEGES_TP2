@@ -18,6 +18,9 @@ namespace CEGES_Services.IServices
         public Task<Periode> UpsertPeriodeAsync(ListeMesuresVM vm);
         public Task<IEnumerable<ApplicationUser>> GetAnalystesListAsync();
 
-        public Task<EntrepriseSommaire> GetEntrepriseStatistiquesSommaire(int entrepriseId);
-    }
+        public Task<EntrepriseSommaire> GetEntrepriseStatistiquesSommaire(int entrepriseId,int periodeId);
+
+		public Task<EntrepriseDetails> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId);
+
+	}
 }

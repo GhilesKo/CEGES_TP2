@@ -53,37 +53,39 @@ namespace CEGES_API.Controllers
 		}
 
 
-		[HttpGet("{entrepriseId}/sommaire")]
-		public async Task<IActionResult> StatistiquesSommaireEntreprise(int entrepriseId)
+		[HttpGet("sommaire")]
+		public async Task<IActionResult> StatistiquesSommaireEntreprise([FromQuery]int entrepriseId, int periodeId)
 		{
 
-			//
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-
-			//Check if analyste has access to that entreprise
+			////Check if analyste has access to that entreprise
 			//var entreprisesAnalyste = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId).Select(e => e.Id);
-
 			//if (!entreprisesAnalyste.Any(c => c == entrepriseId))
 			//{
 			//	return Unauthorized();
 			//}
 
-
-			var vm = await _services.Analyse.GetEntrepriseStatistiquesSommaire(entrepriseId);
-
+			var vm = await _services.Analyse.GetEntrepriseStatistiquesSommaire(entrepriseId,periodeId);
 			return Ok(vm);
 		}
 
 
-		[HttpGet("{entrepriseId}/details")]
-		public async Task<IActionResult> StatistiquesDetaillesEntreprise(int entrepriseId)
+		[HttpGet("details")]
+		public async Task<IActionResult> StatistiquesDetaillesEntreprise(int entrepriseId, int periodeId)
 		{
 
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-			var user = await _userManager.GetUserAsync(User);
 
-			return Ok();
+			////Check if analyste has access to that entreprise
+			//var entreprisesAnalyste = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId).Select(e => e.Id);
+			//if (!entreprisesAnalyste.Any(c => c == entrepriseId))
+			//{
+			//	return Unauthorized();
+			//}
+
+			var vm = await _services.Analyse.GetEntrepriseStatistiquesDetails(entrepriseId, periodeId);
+			return Ok(vm);
 		}
 	}
 }

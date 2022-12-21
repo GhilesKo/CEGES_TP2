@@ -203,16 +203,21 @@ namespace CEGES_Services
 			//return await _uow.Users.GetAllAsync();
 		}
 
-		public async Task<EntrepriseSommaire> GetEntrepriseStatistiquesSommaire(int entrepriseId)
+		public async Task<EntrepriseSommaire> GetEntrepriseStatistiquesSommaire(int entrepriseId, int periodeId)
 		{
-			var sommaire = await _uow.Entreprises.GetEntrepriseStatistiquesSommaire(entrepriseId);
-			
+			var sommaire = await _uow.Entreprises.GetEntrepriseStatistiquesSommaire(entrepriseId, periodeId);
+
 			return sommaire;
 		}
 
 
+		public async Task<EntrepriseDetails> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId)
+		{
+			var details = await _uow.Entreprises.GetEntrepriseStatistiquesDetails(entrepriseId, periodeId);
 
+			return details;
+		}
 
-
+		
 	}
 }

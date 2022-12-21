@@ -12,7 +12,10 @@ namespace CEGES_Core.IRepository
         public IEnumerable<ListeEntreprisesVM> GetEntreprisesAndCounts();
         public IEnumerable<ListeEntreprisesVM> GetAnalysteEntreprisesAndCountsAsync(string userId);
 
-        public Task<EntrepriseSommaire> GetEntrepriseStatistiquesSommaire(int entrepriseId);
+        public Task<EntrepriseSommaire> GetEntrepriseStatistiquesSommaire(int entrepriseId, int periodeId);
+
+		public Task<EntrepriseDetails> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId);
+
 
 	}
 }
