@@ -2,7 +2,12 @@ button {
   margin-right: 8px;
 }
 
-.row{
-  display: grid ;
-  grid-template-columns: repeat(3,1fr);
+.row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.class1 {
+
+  background-color: #e9ecef;
 }

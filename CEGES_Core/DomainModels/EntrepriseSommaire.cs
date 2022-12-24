@@ -8,9 +8,9 @@ namespace CEGES_Core.DTOs
 {
 	public class EntrepriseSommaire
 	{
-		public int Id { get; init; }
+		//public int Id { get; init; }
 		public string Nom { get; init; }
-		public decimal EmissionTotal { get; init; }
+		public decimal Total { get; init; }
 		public IEnumerable<GroupeSommaire> Groupes { get; init; }
 	}
 }

@@ -12,21 +12,19 @@ export class DialogService {
 
 
 
- public openPeriodesDialog(periodes: Record<string, Periode[]>, avecVariation: boolean, callback:Function ) {
+ public openPeriodesDialog(periodes: Record<string, Periode[]>, avecVariation: boolean, fetchCallback:Function ) {
     
     const dialogRef = this.dialog.open(PeriodesDialogComponent, {
       data: {
         periodes: periodes,
-        avecVariation: avecVariation
+        // avecVariation: avecVariation
       },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      // console.log('The dialog was closed');  
-      if (result) {
+    dialogRef.afterClosed().subscribe(selectedPeriode => {
+      if (selectedPeriode) {
       // console.log('executing callback', result)
-
-        callback(result);
+      fetchCallback(selectedPeriode);
       }
 
     });

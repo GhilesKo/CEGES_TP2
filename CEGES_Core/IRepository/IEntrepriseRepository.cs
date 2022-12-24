@@ -17,7 +17,7 @@ namespace CEGES_Core.IRepository
 
 		public Task<EntrepriseSommaireAvecVariation> GetEntrepriseStatistiquesSommaireAvecVariations(int entrepriseId, int periodeId, int periodeId2);
 
-		public Task<EntrepriseDetails> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId);
+		public Task<EntrepriseDetailsVM> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId);
 
 		public Task<EntrepriseDetailsAvecVariation> GetEntrepriseStatistiquesDetailsAvecVariations(int entrepriseId, int periodeId,int periodeId2);
 

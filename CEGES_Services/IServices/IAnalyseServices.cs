@@ -21,10 +21,10 @@ namespace CEGES_Services.IServices
 		public Task<IEnumerable<ApplicationUser>> GetAnalystesListAsync();
 
 		public Task<EntrepriseSommaire> GetEntrepriseStatistiquesSommaire(int entrepriseId, int periodeId);
-		public Task<EntrepriseSommaireAvecVariationVM> GetEntrepriseStatistiquesSommaireAvecVariations(int entrepriseId, int periodeId, int periodeAnterieurId);
+		public Task<EntrepriseSommaireAvecVariationVM> GetEntrepriseStatistiquesSommaireAvecVariations(int entrepriseId, int periodeId, string dateOption);
 
-		public Task<EntrepriseDetails> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId);
-		public Task<EntrepriseDetailsAvecVariationVM> GetEntrepriseStatistiquesDetailsAvecVariations(int entrepriseId, int periodeId, int periodeAnterieurId);
+		public Task<EntrepriseDetailsVM> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId);
+		public Task<EntrepriseDetailsAvecVariationVM> GetEntrepriseStatistiquesDetailsAvecVariations(int entrepriseId, int periodeId, string dateOption);
 
 
 	}

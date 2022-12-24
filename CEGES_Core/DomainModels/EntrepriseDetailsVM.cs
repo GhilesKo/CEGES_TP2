@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace CEGES_Core.DTOs
 {
-	public class EntrepriseDetails
+	public class EntrepriseDetailsVM
 	{
 
 		public string Nom { get; set; }
 
-		public decimal EmissionTotal { get; set; }
+		public decimal Total { get; set; }
 
 		public IEnumerable<EquipementDetails> Equipements { get; set; }
 

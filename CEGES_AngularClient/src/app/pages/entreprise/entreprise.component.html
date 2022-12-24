@@ -6,38 +6,36 @@
 
 
 <mat-tab-group preserveContent>
-  <!-- <mat-tab>
+  <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">incomplete_circle</mat-icon>
       Statistiques sommaires
     </ng-template>
 
-    Tab Content
+    <!-- Tab Content -->
     <div class="content">
       <ng-container *ngIf="periodes; else notLoaded">
         <app-summary [entrepriseId]="entrepriseId" [periodes]="periodes"></app-summary>
       </ng-container>
-
-    
     </div>
 
-  </mat-tab> -->
+  </mat-tab>
 
 
-  <mat-tab>
+  <!-- <mat-tab>
     <div class="content">
       <ng-template mat-tab-label>
         <mat-icon class="example-tab-icon">table_row</mat-icon>
         Statistiques détaillées
       </ng-template>
 
-      <!-- Tab Content -->
+      Tab Content
       <ng-container *ngIf="periodes; else notLoaded">
         <app-details [entrepriseId]="entrepriseId" [periodes]="periodes"></app-details>
       </ng-container>
     </div>
 
-  </mat-tab>
+  </mat-tab> -->
 </mat-tab-group>
 
 <ng-template #notLoaded>

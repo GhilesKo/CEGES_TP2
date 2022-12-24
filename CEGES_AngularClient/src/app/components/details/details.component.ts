@@ -54,10 +54,10 @@ export class DetailsComponent implements OnInit, AfterViewInit {
 
   fetchStatistiqueDetails() {
 
-    if (!this.avecVariation) {
+    if (!this.avecVariation) {  
       if (this.periode) {
         this.dataService.getStatistiqueDetails(this.entrepriseId!, this.periode?.id, this.avecVariation).subscribe(
-          data => {
+          (data:any) => {
             const total = data.emissionTotal;
             const mappedEquipements = data.equipements.map((e: Equipement) => {
               const pourcentage = e.emission / total * 100
@@ -85,7 +85,7 @@ export class DetailsComponent implements OnInit, AfterViewInit {
 
 
     if (this.periode && this.periodeAnterieur) {
-      this.dataService.getStatistiqueSommaire(this.entrepriseId!, this.periode.id, this.avecVariation, this.periodeAnterieur.id).subscribe(
+      this.dataService.getStatistiqueSommaire(this.entrepriseId!, this.periode.id, this.avecVariation, 'same').subscribe(
         res => console.log(res),
         err => console.log(err),
         () => console.log(),
@@ -94,7 +94,7 @@ export class DetailsComponent implements OnInit, AfterViewInit {
 
   }
 
-  openPeriodesDialog() {
+  openDialog() {
 
     const callback = (pickedPeriode: any) => {
       this.periode = pickedPeriode;

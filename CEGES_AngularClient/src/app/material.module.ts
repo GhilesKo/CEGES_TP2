@@ -15,6 +15,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
+import {MatRadioModule} from '@angular/material/radio';
 const modules = [
   MatCardModule,
   MatInputModule,
@@ -28,7 +29,8 @@ const modules = [
   MatDividerModule,
   MatTableModule,
   MatPaginatorModule,
-  MatSortModule
+  MatSortModule,
+  MatRadioModule
 ];
 
 @NgModule({

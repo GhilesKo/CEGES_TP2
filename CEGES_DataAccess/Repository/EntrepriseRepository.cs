@@ -72,10 +72,10 @@ namespace CEGES_DataAccess.Repository
 				{
 
 					Nom = e.Nom,
-					EmissionTotal = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId).Select(m => m.Valeur).Sum(),
+					Total = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId).Select(m => m.Valeur).Sum(),
 					Groupes = e.Groupes.Take(10).Select(g => new GroupeSommaire
 					{
-						Id = g.Id,
+						//Id = g.Id,
 						Nom = g.Nom,
 						Total = g.Equipements.SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId).Select(m => m.Valeur).Sum()
 					})
@@ -101,7 +101,7 @@ namespace CEGES_DataAccess.Repository
 					}),
 					Groupes = e.Groupes.Take(10).Select(g => new GroupeSommaire
 					{
-						Id = g.Id,
+						//Id = g.Id,
 						Nom = g.Nom,
 						Total = g.Equipements.SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId).Select(m => m.Valeur).Sum()
 					})
@@ -111,7 +111,7 @@ namespace CEGES_DataAccess.Repository
 			//return new EntrepriseSommaireAvecVariation();
 		}
 
-		public async Task<EntrepriseDetails> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId)
+		public async Task<EntrepriseDetailsVM> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId)
 		{
 			return await _db.Entreprises
 				.AsNoTracking()
@@ -119,10 +119,10 @@ namespace CEGES_DataAccess.Repository
 				//.ThenInclude(g => g.Equipements)
 				//.ThenInclude(e => e.Mesures)
 				.Where(e => e.Id == entrepriseId)
-				.Select(e => new EntrepriseDetails
+				.Select(e => new EntrepriseDetailsVM
 				{
 					Nom = e.Nom,
-					EmissionTotal = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId).Select(m => m.Valeur).Sum(),
+					Total = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId).Select(m => m.Valeur).Sum(),
 					Equipements = e.Groupes
 						.SelectMany(g => g.Equipements)
 						.SelectMany(e => e.Mesures)
@@ -167,7 +167,7 @@ namespace CEGES_DataAccess.Repository
 						//.GroupBy(m => m.PeriodeId)
 						.Select(m => new EquipementDetails
 						{
-							PeriodeId = m.PeriodeId,
+							//PeriodeId = m.PeriodeId,
 							Nom = m.Equipement.Nom,
 							Groupe = m.Equipement.Groupe.Nom,
 							Type = m.Equipement.Type.GetDisplayName(),

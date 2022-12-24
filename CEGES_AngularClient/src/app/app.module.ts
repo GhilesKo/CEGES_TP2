@@ -35,7 +35,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     DetailsComponent,
     PeriodesDialogComponent,
     UnauthorizedComponent,
-  ],
+  ], 
   imports: [
     BrowserModule,
     ReactiveFormsModule,

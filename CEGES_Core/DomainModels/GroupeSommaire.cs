@@ -8,7 +8,7 @@ namespace CEGES_Core.DTOs
 {
 	public class GroupeSommaire
 	{
-		public int Id { get; init; }
+		//public int Id { get; init; }
 		public string Nom { get; init; }
 		public decimal Total { get; init; }
 	}

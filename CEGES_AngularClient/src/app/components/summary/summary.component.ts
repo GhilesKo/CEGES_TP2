@@ -1,7 +1,7 @@
 import { Component, ViewChild, Input, OnInit } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
 import Periode from 'src/app/dtos/responses/Periode';
-import { ChartComponent } from "ng-apexcharts";
+import { ApexPlotOptions, ApexTitleSubtitle, ChartComponent } from "ng-apexcharts";
 import {
   ApexNonAxisChartSeries,
   ApexResponsive,
@@ -9,6 +9,8 @@ import {
 } from "ng-apexcharts";
 import { lastValueFrom } from 'rxjs';
 import { DialogService } from 'src/app/services/dialog.service';
+import EntrepriseSommaire from 'src/app/dtos/responses/EntrepriseSommaire';
+import EntrepriseSommaireAvecVariations from 'src/app/dtos/responses/EntrepriseSommaireAvecVariations';
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
@@ -21,8 +23,11 @@ export class SummaryComponent implements OnInit {
 
 
   avecVariation = false;
-  periode?: Periode;
-  periodeAnterieur?: Periode;
+
+  vartiationOptions: any[] = [{ value: 'same', text: 'mois précédent', }, { value: 'last', text: 'même mois de l’année précédente' }]
+  selectedOption: string = 'same';
+
+  selectedPeriode?: Periode;
 
   @ViewChild("chart") chart?: ChartComponent;
   public chartOptions?: Partial<ChartOptions>;
@@ -33,67 +38,61 @@ export class SummaryComponent implements OnInit {
 
   ngOnInit() { }
 
-  getStatistiqueSommaire() {
-    this.dataService.getStatistiqueSommaire(1, 1, false, 2).subscribe(
-      res => console.log(res),
-      err => console.log(err),
-      () => console.log()
-    )
-  }
 
-  openPeriodesDialog() {
 
-    const callback = (pickedPeriode:any) => {
-      this.periode = pickedPeriode;
-      this.fetchStatistiqueSommaire()
+  openDialog() {
+
+    const callback = (selectedPeriode: Periode) => {
+      this.fetchStatistiqueSommaire(selectedPeriode)
+      this.selectedPeriode = selectedPeriode;
     }
 
     this.dialogService.openPeriodesDialog(this.periodes!, this.avecVariation, callback);
-   
+
   }
 
 
-  async fetchStatistiqueSommaire(): Promise<any> {
+  fetchStatistiqueSommaire(selectedPeriode: Periode) {
 
-    if (!this.avecVariation) {
-      if (this.periode) {
-        try {
-          const result: any = await lastValueFrom(this.dataService.getStatistiqueSommaire(this.entrepriseId!, this.periode?.id, this.avecVariation));
-          // console.log(result)
+
+    // const avecVariation = selectedDates.length < 2 ? false: true;
+
+
+    // console.log(this.entrepriseId,selectedPeriode.nom,this.avecVariation,this.selectedOption)
+    try {
+
+      this.dataService.getStatistiqueSommaire(this.entrepriseId!, selectedPeriode.id, this.avecVariation, this.selectedOption!).subscribe(
+        result  =>{
           const data = result.groupes.map((g: any) => g.total);
           // console.log(data)
           const noms = result.groupes.map((g: any) => g.nom);
           // console.log(noms)
           this.chartOptions = {
-
+    
             series: [...data],
             chart: {
-              toolbar: {
-                show: true
-              },
-              width: 380,
+              width: 400,
               type: "pie"
             },
             labels: [...noms],
-
+    
           };
-          return result;
-        } catch (error) {
-          console.log(error)
-        }
-      }
-      return;
-
-    }
-
-
-    if (this.periode && this.periodeAnterieur) {
-      this.dataService.getStatistiqueSommaire(this.entrepriseId!, this.periode.id, this.avecVariation, this.periodeAnterieur.id).subscribe(
-        res => console.log(res),
+        },
         err => console.log(err),
-        () => console.log(),
+        () => { 'completed' },
       )
+      // const result = await lastValueFrom(this.dataService.getStatistiqueSommaire(this.entrepriseId!, selectedPeriode.id, this.avecVariation, this.selectedOption!));
+      // console.log(result)
+      // return result;
+
+    } catch (error) {
+      console.log(error)
+
     }
+
+
+
+
 
   }
 
@@ -105,4 +104,5 @@ export type ChartOptions = {
   chart: ApexChart;
   responsive: ApexResponsive[];
   labels: any;
+  plotOptions: ApexPlotOptions
 };

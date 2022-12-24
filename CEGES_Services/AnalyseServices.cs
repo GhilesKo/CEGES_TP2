@@ -7,12 +7,14 @@ using CEGES_DataAccess.Data;
 using CEGES_Services.IServices;
 using CEGES_Util;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CEGES_Services
@@ -40,9 +42,9 @@ namespace CEGES_Services
 			//periodes = AddPeriodesManquantes(periodes);
 
 
-			var vm = periodes.SelectMany(p => p.Value).Where(p=>p.Mesures.Any());
+			var vm = periodes.SelectMany(p => p.Value).Where(p => p.Mesures.Any());
 
-			var vm2 =vm.Select(p => new PeriodeVM
+			var vm2 = vm.Select(p => new PeriodeVM
 			{
 				Id = p.Id,
 				Nom = p.Nom,
@@ -103,7 +105,7 @@ namespace CEGES_Services
 
 		public async Task<Dictionary<int, List<Periode>>> GetPeriodesEtAnnees(int id)
 		{
-			IEnumerable<Periode> periodes = await _uow.Periodes.GetAllAsync(p => p.EntrepriseId == id, q => q.OrderBy(p => p.Debut), isTracking:false, includeProperties: "Mesures.Equipement.Groupe");
+			IEnumerable<Periode> periodes = await _uow.Periodes.GetAllAsync(p => p.EntrepriseId == id, q => q.OrderBy(p => p.Debut), isTracking: false, includeProperties: "Mesures.Equipement.Groupe");
 			Dictionary<int, List<Periode>> py = new Dictionary<int, List<Periode>>();
 			foreach (Periode p in periodes)
 			{
@@ -235,39 +237,127 @@ namespace CEGES_Services
 			return sommaire;
 		}
 
-		public async Task<EntrepriseSommaireAvecVariationVM> GetEntrepriseStatistiquesSommaireAvecVariations(int entrepriseId, int periodeId, int periodeAnterieurId)
+		public async Task<EntrepriseSommaireAvecVariationVM> GetEntrepriseStatistiquesSommaireAvecVariations(int entrepriseId, int periodeId, string dateOption)
 		{
-			var sommaireAvecVariation = await _uow.Entreprises.GetEntrepriseStatistiquesSommaireAvecVariations(entrepriseId, periodeId, periodeAnterieurId);
+			//check if periode exist;
+			var periode = await _uow.Periodes.FirstOrDefaultAsync(p => p.Id == periodeId && p.EntrepriseId == entrepriseId, includeProperties: "Mesures.Equipement.Groupe,Entreprise", isTracking: false);
 
-			var vm = new EntrepriseSommaireAvecVariationVM
+			if (periode == null)
 			{
-				Nom = sommaireAvecVariation.Nom,
-				EmissionsTotal = sommaireAvecVariation.EmissionsTotal.ToDictionary(o => o.PeriodeId, o => o.Total),
-				Groupes = sommaireAvecVariation.Groupes
+				throw new Exception($"Periode '{periodeId}' not found");
+			}
+
+			//same year
+			var sameYear = periode.Debut.AddMonths(-1);
+
+			//last year
+			var lastYear = periode.Debut.AddYears(-1);
+
+			//check if periode has an antecedant (same year / last year)
+			//options:  same vs last
+			var periodeAnterieur = dateOption == "same"
+				? await _uow.Periodes.FirstOrDefaultAsync(filter: p => p.Debut.Date == sameYear.Date && p.Id != periodeId && p.EntrepriseId == entrepriseId, includeProperties: "Mesures", isTracking: false)
+				: await _uow.Periodes.FirstOrDefaultAsync(filter: p => p.Debut.Date == lastYear.Date && p.Id != periodeId && p.EntrepriseId == entrepriseId, includeProperties: "Mesures", isTracking: false);
+
+			if (periodeAnterieur == null)
+			{
+				throw new Exception($"Aucune periode anterieur à '{periodeId}'");
+			}
+
+			var statsSommaireDTO = new EntrepriseSommaireAvecVariationVM
+			{
+				Nom = periode.Entreprise.Nom,
+				Total = periode.Mesures.Sum(m => m.Valeur),
+				TotalPeriodeAnterieure = periodeAnterieur.Mesures.Sum(m => m.Valeur),
+				Groupes = periode.Mesures.GroupBy(m => m.Equipement.Groupe.Nom).Select(gr => new GroupeSommaire
+				{
+					Nom = gr.Key,
+					Total = gr.Sum(m => m.Valeur)
+				}).Take(10)
 			};
 
-			return vm;
+
+			//var sommaireAvecVariation = await _uow.Entreprises.GetEntrepriseStatistiquesSommaireAvecVariations(entrepriseId, periodeId, periodeAnterieurId);
+
+			//var vm = new EntrepriseSommaireAvecVariationVM
+			//{
+			//	Nom = sommaireAvecVariation.Nom,
+			//	EmissionsTotal = sommaireAvecVariation.EmissionsTotal.ToDictionary(o => o.PeriodeId, o => o.Total),
+			//	Groupes = sommaireAvecVariation.Groupes
+			//};
+
+			return statsSommaireDTO;
 		}
 
-		public async Task<EntrepriseDetails> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId)
+		public async Task<EntrepriseDetailsVM> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId)
 		{
 			var details = await _uow.Entreprises.GetEntrepriseStatistiquesDetails(entrepriseId, periodeId);
 
 			return details;
 		}
 
-		public async Task<EntrepriseDetailsAvecVariationVM> GetEntrepriseStatistiquesDetailsAvecVariations(int entrepriseId, int periodeId, int periodeAnterieurId)
+		public async Task<EntrepriseDetailsAvecVariationVM> GetEntrepriseStatistiquesDetailsAvecVariations(int entrepriseId, int periodeId, string dateOption)
 		{
-			var detailsAvecVariation = await _uow.Entreprises.GetEntrepriseStatistiquesDetailsAvecVariations(entrepriseId, periodeId, periodeAnterieurId);
+			//check if periode exist;
+			var periode = await _uow.Periodes.FirstOrDefaultAsync(p => p.Id == periodeId && p.EntrepriseId == entrepriseId, includeProperties: "Mesures.Equipement.Groupe,Entreprise", isTracking: false);
 
-			var vm = new EntrepriseDetailsAvecVariationVM
+			if (periode == null)
 			{
-				Nom = detailsAvecVariation.Nom,
-				EmissionsTotal = detailsAvecVariation.EmissionsTotal.ToDictionary(o => o.PeriodeId, o => o.Total),
-				Equipements = detailsAvecVariation.Equipements.GroupBy(d => d.PeriodeId).ToDictionary(o => o.Key)
+				throw new Exception($"Periode '{periodeId}' not found");
+			}
+
+			//same year
+			var sameYear = periode.Debut.AddMonths(-1);
+
+			//last year
+			var lastYear = periode.Debut.AddYears(-1);
+
+			//check if periode has an antecedant (same year / last year)
+			//options:  same vs last
+			var periodeAnterieur = dateOption == "same"
+				? await _uow.Periodes.FirstOrDefaultAsync(filter: p => p.Debut.Date == sameYear.Date && p.Id != periodeId && p.EntrepriseId == entrepriseId, includeProperties: "Mesures", isTracking: false)
+				: await _uow.Periodes.FirstOrDefaultAsync(filter: p => p.Debut.Date == lastYear.Date && p.Id != periodeId && p.EntrepriseId == entrepriseId, includeProperties: "Mesures", isTracking: false);
+
+
+			if (periodeAnterieur == null)
+			{
+				throw new Exception($"Aucune periode anterieur à '{periodeId}'");
+			}
+
+			var Total = periode.Mesures.Sum(m => m.Valeur);
+			var TotalPeriodeAnterieure = periodeAnterieur.Mesures.Sum(m => m.Valeur);
+
+			var statsDetaillesDTO = new EntrepriseDetailsAvecVariationVM
+			{
+				Nom = periode.Entreprise.Nom,
+				Total = Total,
+				TotalPeriodeAnterieure = TotalPeriodeAnterieure,
+				Equipements = periode.Mesures.Select(m => new EquipementDetails
+				{
+					Id = m.EquipementId,
+					Nom = m.Equipement.Nom,
+					Groupe = m.Equipement.Groupe.Nom,
+					Type = m.Equipement.Type.GetDisplayName(),
+					Emission = m.Valeur,
+					Pourcentage = m.Valeur / Total,
+					EmissionAnterieure = periodeAnterieur.Mesures.FirstOrDefault(c => c.EquipementId == m.EquipementId).Valeur
+				})
 			};
 
-			return vm;
+
+			return statsDetaillesDTO;
+
+
+			//var detailsAvecVariation = await _uow.Entreprises.GetEntrepriseStatistiquesDetailsAvecVariations(entrepriseId, periodeId, periodeAnterieurId);
+
+			//var vm = new EntrepriseDetailsAvecVariationVM
+			//{
+			//	//Nom = detailsAvecVariation.Nom,
+			//	//EmissionsTotal = detailsAvecVariation.EmissionsTotal.ToDictionary(o => o.PeriodeId, o => o.Total),
+			//	//Equipements = detailsAvecVariation.Equipements.GroupBy(d => d.PeriodeId).ToDictionary(o => o.Key)
+			//};
+
+			//return vm;
 		}
 
 	}

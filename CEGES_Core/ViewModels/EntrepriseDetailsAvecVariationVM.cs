@@ -9,10 +9,12 @@ namespace CEGES_Core.ViewModels
 {
 	public class EntrepriseDetailsAvecVariationVM
 	{
-		public string Nom { get; set; }
+		public string Nom { get; init; }
 
-		public Dictionary<int,decimal> EmissionsTotal { get; set; }
+		public decimal Total { get; set; }
 
-		public Dictionary<int, IGrouping<int, EquipementDetails>> Equipements { get; set; }
+		public decimal TotalPeriodeAnterieure { get; set; }
+
+		public IEnumerable<EquipementDetails> Equipements { get; set; }
 	}
 }
