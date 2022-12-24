@@ -1,0 +1,26 @@
+<div class="container">
+
+  <h1>Statisiques Sommaires </h1>
+
+  <div class="d-flex justify-content-between align-items-center">
+    
+    <div class="d-flex align-items-center">
+      <button class="" mat-raised-button color="primary" (click)="openPeriodesDialog()">Choisir une période</button>
+      <h4 class="">{{periode ? periode.nom :'Aucune date sélectionnée'}}</h4>
+    </div>
+
+    <mat-slide-toggle [(ngModel)]="avecVariation" color="primary" aria-label="Variations">Avec
+      variations</mat-slide-toggle>
+
+
+  </div>
+  <!--The content below is only a placeholder and can be replaced.-->
+  <div id="chart" *ngIf="chartOptions">
+    <apx-chart 
+    [series]="chartOptions.series!" 
+    [chart]="chartOptions.chart!" 
+    [labels]="chartOptions.labels"
+    ></apx-chart>
+  </div>
+
+</div>

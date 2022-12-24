@@ -1,5 +1,5 @@
 <nav>
-  <h1>CEGES</h1>
+  <a href="#"><h1 >CEGES</h1></a>
   <div class="actions">
     <div *ngIf="!(authService.isLoggedIn$ | async); else loggedOut">
       <button mat-raised-button color="primary" routerLink="/login">Login</button>

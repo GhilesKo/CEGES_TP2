@@ -17,9 +17,15 @@ export class LoginComponent implements OnInit {
   @Input() error?: string | null;
 
 
-  constructor(private authService: AuthService, private formBuilder: FormBuilder, private router: Router) { }
+  constructor(private authService: AuthService, private formBuilder: FormBuilder, private router: Router) {
+
+    if (this.authService.checkToken()) {
+      this.router.navigate(['/home'])
+    }
+  }
 
   ngOnInit() {
+
   }
 
   submit() {

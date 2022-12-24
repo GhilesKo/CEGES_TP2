@@ -19,13 +19,14 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(catchError(err => {
       //401 is not logged in 
       //403 no enough privileges
+      // console.log('interceptor',request)
       if (err.status === 401) {
         // redirect to the login page
-        this.router.navigate(['/login']);
-      }
-      if ([401, 403].includes(err.status) && this.authService.isLoggedIn$) {
-        // auto logout if 401 or 403 response returned from api
         this.authService.signOut();
+      }
+      if (err.status === 403) {
+        // redirect to the login page
+        this.router.navigate(['/403'])
       }
 
       const error = err.error?.message || err.statusText;

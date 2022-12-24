@@ -1,5 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import Entreprise from 'src/app/dtos/requests/Entreprise';
 import { AuthService } from 'src/app/services/auth.service';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-home',
@@ -8,11 +11,20 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private authService:AuthService) { }
+  public entreprises?: Entreprise[];
+
+  constructor(private authService: AuthService, private dataService: DataService) { }
 
   ngOnInit() {
+
+    this.dataService.getEntreprises().subscribe(
+      res => this.entreprises = res,
+      err => console.log(err),
+      () => console.log('/analyse/entreprises completed')
+    )
+
   }
-  getClaims(){
+  getClaims() {
     this.authService.getClaims().subscribe();
   }
 }

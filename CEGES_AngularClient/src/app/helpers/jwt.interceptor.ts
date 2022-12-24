@@ -16,7 +16,6 @@ export class JwtInterceptor implements HttpInterceptor {
 
     // add auth header with jwt if account is logged in and request is to the api url
     const isLoggedIn = this.authService.isLoggedIn$;
-    console.log(request)
     if (isLoggedIn) {
         request = request.clone({
             setHeaders: { Authorization: `Bearer ${localStorage.getItem('ceges-auth')}` }

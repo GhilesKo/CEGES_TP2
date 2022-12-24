@@ -15,7 +15,7 @@ export class AuthService {
 
   constructor(private http: HttpClient,private router:Router) {
     const logged = this.checkToken();
-    console.log('logged in: ', logged);
+    // console.log('logged in: ', logged);
     this._isLoggedIn$.next(logged);
   }
 
@@ -43,7 +43,7 @@ export class AuthService {
         console.log(response)
       }))
   }
-  private checkToken(): boolean {
+  public checkToken(): boolean {
     const token = localStorage.getItem('ceges-auth');
     return !!token && this.tokenExpired(token);
   }

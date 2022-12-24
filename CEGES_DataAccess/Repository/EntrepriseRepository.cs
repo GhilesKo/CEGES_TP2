@@ -1,4 +1,5 @@
 ﻿using CEGES_Core;
+using CEGES_Core.DomainModels;
 using CEGES_Core.DTOs;
 using CEGES_Core.IRepository;
 using CEGES_Core.ViewModels;
@@ -66,15 +67,12 @@ namespace CEGES_DataAccess.Repository
 		{
 			return await _db.Entreprises
 				.AsNoTracking()
-				//.Include(e => e.Groupes)
-				//.ThenInclude(g => g.Equipements)
-				//.ThenInclude(e => e.Mesures)
 				.Where(e => e.Id == entrepriseId)
 				.Select(e => new EntrepriseSommaire
 				{
 
 					Nom = e.Nom,
-					Total = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId).Select(m => m.Valeur).Sum(),
+					EmissionTotal = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId).Select(m => m.Valeur).Sum(),
 					Groupes = e.Groupes.Take(10).Select(g => new GroupeSommaire
 					{
 						Id = g.Id,
@@ -85,10 +83,37 @@ namespace CEGES_DataAccess.Repository
 				.FirstOrDefaultAsync();
 
 		}
+		public async Task<EntrepriseSommaireAvecVariation> GetEntrepriseStatistiquesSommaireAvecVariations(int entrepriseId, int periodeId, int periodeId2)
+		{
+			var test = await _db.Entreprises
+				.AsNoTracking()
+				.Where(e => e.Id == entrepriseId)
+				.Select(e => new EntrepriseSommaireAvecVariation
+				{
+					Nom = e.Nom,
+					EmissionsTotal = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures)
+					.Where(m => m.PeriodeId == periodeId || m.PeriodeId == periodeId2)
+					.GroupBy(m => m.PeriodeId)
+					.Select(gr => new EmissionTotal
+					{
+						PeriodeId = gr.Key,
+						Total = gr.Sum(x => x.Valeur)
+					}),
+					Groupes = e.Groupes.Take(10).Select(g => new GroupeSommaire
+					{
+						Id = g.Id,
+						Nom = g.Nom,
+						Total = g.Equipements.SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId).Select(m => m.Valeur).Sum()
+					})
+				})
+				.FirstOrDefaultAsync();
+			return test;
+			//return new EntrepriseSommaireAvecVariation();
+		}
 
 		public async Task<EntrepriseDetails> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId)
 		{
-			return   await _db.Entreprises
+			return await _db.Entreprises
 				.AsNoTracking()
 				//.Include(e => e.Groupes)
 				//.ThenInclude(g => g.Equipements)
@@ -97,23 +122,69 @@ namespace CEGES_DataAccess.Repository
 				.Select(e => new EntrepriseDetails
 				{
 					Nom = e.Nom,
-					EmissionTotal = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId).Select(m=>m.Valeur).Sum(),
+					EmissionTotal = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId).Select(m => m.Valeur).Sum(),
 					Equipements = e.Groupes
-						.SelectMany(g=>g.Equipements)
-						.SelectMany(e=>e.Mesures)
-						.Where(m=>m.PeriodeId == periodeId)
-						.Select(m=> new EquipementDetails
+						.SelectMany(g => g.Equipements)
+						.SelectMany(e => e.Mesures)
+						.Where(m => m.PeriodeId == periodeId)
+						.Select(m => new EquipementDetails
 						{
 							Nom = m.Equipement.Nom,
 							Groupe = m.Equipement.Groupe.Nom,
 							Type = m.Equipement.Type.GetDisplayName(),
 							Emission = m.Valeur,
 						})
-					
-					
+
+
 				})
 				.FirstOrDefaultAsync();
 
 		}
+
+		public async Task<EntrepriseDetailsAvecVariation> GetEntrepriseStatistiquesDetailsAvecVariations(int entrepriseId, int periodeId, int periodeId2)
+		{
+			var test = await _db.Entreprises
+				.AsNoTracking()
+				.Where(e => e.Id == entrepriseId)
+				.Select(e => new EntrepriseDetailsAvecVariation
+				{
+					Nom = e.Nom,
+					EmissionsTotal = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures)
+					.Where(m => m.PeriodeId == periodeId || m.PeriodeId == periodeId2)
+					.GroupBy(m => m.PeriodeId)
+					.Select(gr => new EmissionTotal
+					{
+						PeriodeId = gr.Key,
+						Total = gr.Sum(x => x.Valeur)
+					}),
+
+					//EmissionTotalAnterieur = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId2).Select(m => m.Valeur).Sum(),
+
+					Equipements = e.Groupes
+						.SelectMany(g => g.Equipements)
+						.SelectMany(e => e.Mesures)
+						.Where(m => m.PeriodeId == periodeId || m.PeriodeId == periodeId2)
+						//.GroupBy(m => m.PeriodeId)
+						.Select(m => new EquipementDetails
+						{
+							PeriodeId = m.PeriodeId,
+							Nom = m.Equipement.Nom,
+							Groupe = m.Equipement.Groupe.Nom,
+							Type = m.Equipement.Type.GetDisplayName(),
+							Emission = m.Valeur,
+						})
+
+				})
+				.FirstOrDefaultAsync();
+
+
+
+			return test;
+
+
+
+		}
+
+
 	}
 }

@@ -1,0 +1,15 @@
+.container{
+    padding: 2rem 0 ;
+}
+.actions{
+    display: flex;
+    justify-content: space-between;
+    align-items: center ;
+}
+
+#chart {
+    max-width: 380px;
+    margin: 35px auto;
+    padding: 0;
+  }
+  

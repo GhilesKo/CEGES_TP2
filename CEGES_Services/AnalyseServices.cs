@@ -1,4 +1,5 @@
 ﻿using CEGES_Core;
+using CEGES_Core.DomainModels;
 using CEGES_Core.DTOs;
 using CEGES_Core.IRepository;
 using CEGES_Core.ViewModels;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,15 +32,28 @@ namespace CEGES_Services
 		}
 
 
-		public async Task<ListePeriodesVM> GetListePeriodes(int id)
+		public async Task<IEnumerable<PeriodeVM>> GetListePeriodes(int id)
 		{
-			ListePeriodesVM vm = new ListePeriodesVM()
+
+			var periodes = await GetPeriodesEtAnnees(id);
+
+			//periodes = AddPeriodesManquantes(periodes);
+
+
+
+			var vm = periodes.SelectMany(p => p.Value).Where(p=>p.Mesures.Any());
+
+			var vm2 =vm.Select(p => new PeriodeVM
 			{
-				Periodes = await GetPeriodesEtAnnees(id),
-				Entreprise = await _uow.Entreprises.GetAsync(id)
-			};
-			vm.Periodes = AddPeriodesManquantes(vm.Periodes);
-			return vm;
+				Id = p.Id,
+				Nom = p.Nom,
+				Debut = p.Debut,
+				Fin = p.Fin,
+			});
+
+
+
+			return vm2;
 		}
 
 		private Dictionary<int, List<Periode>> AddPeriodesManquantes(Dictionary<int, List<Periode>> periodesExistantes)
@@ -89,7 +104,7 @@ namespace CEGES_Services
 
 		public async Task<Dictionary<int, List<Periode>>> GetPeriodesEtAnnees(int id)
 		{
-			IEnumerable<Periode> periodes = await _uow.Periodes.GetAllAsync(p => p.EntrepriseId == id, q => q.OrderBy(p => p.Debut));
+			IEnumerable<Periode> periodes = await _uow.Periodes.GetAllAsync(p => p.EntrepriseId == id, q => q.OrderBy(p => p.Debut), isTracking:false, includeProperties: "Mesures.Equipement.Groupe");
 			Dictionary<int, List<Periode>> py = new Dictionary<int, List<Periode>>();
 			foreach (Periode p in periodes)
 			{
@@ -203,6 +218,17 @@ namespace CEGES_Services
 			//return await _uow.Users.GetAllAsync();
 		}
 
+		public async Task<ListePeriodesVM> GetListePeriodesOriginal(int id)
+		{
+			ListePeriodesVM vm = new ListePeriodesVM()
+			{
+				Periodes = await GetPeriodesEtAnnees(id),
+				Entreprise = await _uow.Entreprises.GetAsync(id)
+			};
+			vm.Periodes = AddPeriodesManquantes(vm.Periodes);
+			return vm;
+		}
+		//dsdaskk
 		public async Task<EntrepriseSommaire> GetEntrepriseStatistiquesSommaire(int entrepriseId, int periodeId)
 		{
 			var sommaire = await _uow.Entreprises.GetEntrepriseStatistiquesSommaire(entrepriseId, periodeId);
@@ -210,6 +236,19 @@ namespace CEGES_Services
 			return sommaire;
 		}
 
+		public async Task<EntrepriseSommaireAvecVariationVM> GetEntrepriseStatistiquesSommaireAvecVariations(int entrepriseId, int periodeId, int periodeAnterieurId)
+		{
+			var sommaireAvecVariation = await _uow.Entreprises.GetEntrepriseStatistiquesSommaireAvecVariations(entrepriseId, periodeId, periodeAnterieurId);
+
+			var vm = new EntrepriseSommaireAvecVariationVM
+			{
+				Nom = sommaireAvecVariation.Nom,
+				EmissionsTotal = sommaireAvecVariation.EmissionsTotal.ToDictionary(o => o.PeriodeId, o => o.Total),
+				Groupes = sommaireAvecVariation.Groupes
+			};
+
+			return vm;
+		}
 
 		public async Task<EntrepriseDetails> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId)
 		{
@@ -218,6 +257,19 @@ namespace CEGES_Services
 			return details;
 		}
 
-		
+		public async Task<EntrepriseDetailsAvecVariationVM> GetEntrepriseStatistiquesDetailsAvecVariations(int entrepriseId, int periodeId, int periodeAnterieurId)
+		{
+			var detailsAvecVariation = await _uow.Entreprises.GetEntrepriseStatistiquesDetailsAvecVariations(entrepriseId, periodeId, periodeAnterieurId);
+
+			var vm = new EntrepriseDetailsAvecVariationVM
+			{
+				Nom = detailsAvecVariation.Nom,
+				EmissionsTotal = detailsAvecVariation.EmissionsTotal.ToDictionary(o => o.PeriodeId, o => o.Total),
+				Equipements = detailsAvecVariation.Equipements.GroupBy(d => d.PeriodeId).ToDictionary(o => o.Key)
+			};
+
+			return vm;
+		}
+
 	}
 }

@@ -31,7 +31,7 @@ namespace CEGES_API.Controllers
 
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			
+
 			var user = await _userManager.GetUserAsync(User);
 
 			List<ListeEntreprisesVM> vm;
@@ -54,7 +54,7 @@ namespace CEGES_API.Controllers
 
 
 		[HttpGet("sommaire")]
-		public async Task<IActionResult> StatistiquesSommaireEntreprise([FromQuery]int entrepriseId, int periodeId)
+		public async Task<IActionResult> StatistiquesSommaireEntreprise([FromQuery] int entrepriseId, int periodeId, bool variation, int periodeAnterieurId)
 		{
 
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -66,13 +66,41 @@ namespace CEGES_API.Controllers
 			//	return Unauthorized();
 			//}
 
-			var vm = await _services.Analyse.GetEntrepriseStatistiquesSommaire(entrepriseId,periodeId);
+
+			//var periodes = await _services.Analyse.GetListePeriodesOriginal(entrepriseId);
+
+			////Liste mesures d'UNE ENTREPRISE at UNE PERIODE Donnee
+			//var mesure = periodes.Periodes.SelectMany(p => p.Value).FirstOrDefault(p => p.Id == periodeId).Mesures.ToList();
+
+			//var dto = new
+			//{
+			//	Total = mesure.Sum(m => m.Valeur),
+			//	Groupes = mesure.GroupBy(m => m.Equipement.Groupe.Nom).Select(o => new
+			//	{
+			//		Nom = o.Key,
+			//		Total = o.Sum(m => m.Valeur)
+			//	})
+
+			//};
+
+
+
+
+
+			if (variation && periodeAnterieurId != 0)
+			{
+				var sommaireAvecVariation = await _services.Analyse.GetEntrepriseStatistiquesSommaireAvecVariations(entrepriseId, periodeId, periodeAnterieurId);
+
+				return Ok(sommaireAvecVariation);
+			}
+
+			var vm = await _services.Analyse.GetEntrepriseStatistiquesSommaire(entrepriseId, periodeId);
 			return Ok(vm);
 		}
 
 
 		[HttpGet("details")]
-		public async Task<IActionResult> StatistiquesDetaillesEntreprise(int entrepriseId, int periodeId)
+		public async Task<IActionResult> StatistiquesDetaillesEntreprise([FromQuery] int entrepriseId, int periodeId, bool avecVariation, int periodeAnterieurId)
 		{
 
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -84,8 +112,35 @@ namespace CEGES_API.Controllers
 			//	return Unauthorized();
 			//}
 
+			if (avecVariation && periodeAnterieurId != 0)
+			{
+				var detailsAvecVariationVM = await _services.Analyse.GetEntrepriseStatistiquesDetailsAvecVariations(entrepriseId, periodeId, periodeAnterieurId);
+
+				return Ok(detailsAvecVariationVM);
+			}
+
 			var vm = await _services.Analyse.GetEntrepriseStatistiquesDetails(entrepriseId, periodeId);
 			return Ok(vm);
 		}
+
+		[HttpGet("periodes/{entrepriseId}")]
+		public async Task<IActionResult> GetPeriodesEntreprise(int entrepriseId)
+		{
+
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			////Check if analyste has access to that entreprise
+			//var entreprisesAnalyste = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId).Select(e => e.Id);
+			//if (!entreprisesAnalyste.Any(c => c == entrepriseId))
+			//{
+			//	return Unauthorized();
+			//}
+
+			var periodesVM = await _services.Analyse.GetListePeriodes(entrepriseId);
+
+
+			return Ok(periodesVM.ToList());
+		}
+
 	}
 }

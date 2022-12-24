@@ -10,7 +10,7 @@ namespace CEGES_Core.DTOs
 	{
 		public int Id { get; init; }
 		public string Nom { get; init; }
-		public decimal Total { get; init; }
+		public decimal EmissionTotal { get; init; }
 		public IEnumerable<GroupeSommaire> Groupes { get; init; }
 	}
 }

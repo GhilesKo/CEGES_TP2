@@ -1,0 +1,41 @@
+<header class="">
+  <img class="" [src]="'https://t4.ftcdn.net/jpg/04/70/29/97/360_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg'"
+    alt="image" />
+  <h1>Hydro-Quebec</h1>
+</header>
+
+
+<mat-tab-group preserveContent>
+  <mat-tab >
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">incomplete_circle</mat-icon>
+      Statistiques sommaires
+    </ng-template>
+
+    <!-- Tab Content-->
+    <ng-container *ngIf="periodes; else notLoaded">
+      <app-summary [entrepriseId]="entrepriseId" [periodes]="periodes"></app-summary>
+    </ng-container>
+    <ng-template #notLoaded>
+      <div class="content">
+        <mat-spinner></mat-spinner>
+      </div>
+    </ng-template>
+
+  </mat-tab>
+
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">table_row</mat-icon>
+      Statistiques détaillées
+    </ng-template>
+
+    <!-- Tab Content -->
+    <ng-container *ngIf="periodes; else notLoaded">
+      <app-details [periodes]="periodes"></app-details>
+    </ng-container>
+
+
+  </mat-tab>
+</mat-tab-group>

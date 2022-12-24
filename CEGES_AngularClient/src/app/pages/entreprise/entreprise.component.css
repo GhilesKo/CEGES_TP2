@@ -1,0 +1,30 @@
+header {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-color: lightslategray;
+}
+
+img {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.example-tab-icon {
+    margin-right: 8px;
+}
+
+.content {
+    /* background-color: red; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* will change over time */
+    height: calc(100vh - 445.69px); 
+
+}

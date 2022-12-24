@@ -1,5 +1,9 @@
-<p>
-  home works!
-</p>
 
-<button (click)="getClaims()">Get Claims</button>
+
+<div class="entreprises">
+
+  <mat-card  class="card" *ngFor="let e of entreprises" [routerLink]="['/entreprise', e.id]" [state]="e">
+    <h3  >{{e.nom}}</h3>
+  </mat-card>
+
+</div>

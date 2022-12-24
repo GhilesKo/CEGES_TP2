@@ -59,7 +59,7 @@ namespace CEGES_MVC.Areas.Analyse.Controllers
 		public async Task<IActionResult> Liste(int id)
 		{
 
-			ListePeriodesVM vm = await _services.Analyse.GetListePeriodes(id);
+			ListePeriodesVM vm = await _services.Analyse.GetListePeriodesOriginal(id);
 			return View(vm);
 		}
 
