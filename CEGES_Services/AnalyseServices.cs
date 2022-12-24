@@ -40,7 +40,6 @@ namespace CEGES_Services
 			//periodes = AddPeriodesManquantes(periodes);
 
 
-
 			var vm = periodes.SelectMany(p => p.Value).Where(p=>p.Mesures.Any());
 
 			var vm2 =vm.Select(p => new PeriodeVM

@@ -1,8 +1,6 @@
-import { Component, ViewChild, Inject, Input, OnInit } from '@angular/core';
+import { Component, ViewChild, Input, OnInit } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
 import Periode from 'src/app/dtos/responses/Periode';
-import { MatDialog } from '@angular/material/dialog';
-import { PeriodesDialogComponent } from '../modals/periodesDialog/periodesDialog.component';
 import { ChartComponent } from "ng-apexcharts";
 import {
   ApexNonAxisChartSeries,
@@ -10,6 +8,7 @@ import {
   ApexChart
 } from "ng-apexcharts";
 import { lastValueFrom } from 'rxjs';
+import { DialogService } from 'src/app/services/dialog.service';
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
@@ -29,14 +28,10 @@ export class SummaryComponent implements OnInit {
   public chartOptions?: Partial<ChartOptions>;
 
 
-  constructor(private dataService: DataService, public dialog: MatDialog) {
-   
-  }
+  constructor(private dataService: DataService, public dialogService: DialogService) { }
 
 
-  ngOnInit() {
-    // console.log(this.periodes)
-  }
+  ngOnInit() { }
 
   getStatistiqueSommaire() {
     this.dataService.getStatistiqueSommaire(1, 1, false, 2).subscribe(
@@ -47,22 +42,14 @@ export class SummaryComponent implements OnInit {
   }
 
   openPeriodesDialog() {
-    const dialogRef = this.dialog.open(PeriodesDialogComponent, {
-      data: {
-        periodes: this.periodes,
-        avecVariation: this.avecVariation
-      },
 
-    });
+    const callback = (pickedPeriode:any) => {
+      this.periode = pickedPeriode;
+      this.fetchStatistiqueSommaire()
+    }
 
-    dialogRef.afterClosed().subscribe(result => {
-      // console.log('The dialog was closed');
-      if (result) {
-        this.periode = result;
-        this.fetchStatistiqueSommaire()
-      }
-
-    });
+    this.dialogService.openPeriodesDialog(this.periodes!, this.avecVariation, callback);
+   
   }
 
 
@@ -72,17 +59,17 @@ export class SummaryComponent implements OnInit {
       if (this.periode) {
         try {
           const result: any = await lastValueFrom(this.dataService.getStatistiqueSommaire(this.entrepriseId!, this.periode?.id, this.avecVariation));
-          console.log(result)
-          const data = result.groupes.map((g:any) => g.total);
-          console.log(data)
-          const noms = result.groupes.map((g:any) => g.nom);
-          console.log(noms)
+          // console.log(result)
+          const data = result.groupes.map((g: any) => g.total);
+          // console.log(data)
+          const noms = result.groupes.map((g: any) => g.nom);
+          // console.log(noms)
           this.chartOptions = {
-            
+
             series: [...data],
             chart: {
-              toolbar:{
-                show:true
+              toolbar: {
+                show: true
               },
               width: 380,
               type: "pie"

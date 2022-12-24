@@ -25,6 +25,7 @@
     "@popperjs/core": "^2.11.6",
     "apexcharts": "^3.36.3",
     "bootstrap": "^5.2.3",
+    "datatables.net-bs5": "^1.11.3",
     "jest-editor-support": "*",
     "ng-apexcharts": "^1.7.4",
     "rxjs": "~7.5.0",

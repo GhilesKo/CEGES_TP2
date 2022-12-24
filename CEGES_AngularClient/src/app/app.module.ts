@@ -22,6 +22,7 @@ import { PeriodesDialogComponent } from './components/modals/periodesDialog/peri
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgApexchartsModule } from 'ng-apexcharts';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,13 +45,12 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     MaterialModule,
     NgbModule,
     FormsModule,
-    NgApexchartsModule,
+    NgApexchartsModule
 
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    
   ],
   bootstrap: [AppComponent]
 })

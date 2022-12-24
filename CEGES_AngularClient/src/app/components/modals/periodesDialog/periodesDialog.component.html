@@ -4,9 +4,9 @@
   <div class="row">
 
     <!-- Key: <b>{{item.key}}</b> and Value: <b>{{item.value}}</b> -->
-    <ng-template *ngIf="data.periodes.lenght; else noPeriodes">
+    <div *ngIf="hasPeriodes; else noPeriodes">
       <div *ngFor="let groupe of data.periodes  | keyvalue" class="col mb-4">
-        <div class="card " style="min-width: 15rem; max-width: 17rem;">
+        <div class="card" style="min-width: 15rem; max-width: 17rem;">
           <div class="card-body">
             <div class="list-group list-group-flush">
               <div class="list-group-item active">{{groupe.key}}</div>
@@ -17,7 +17,7 @@
           </div>
         </div>
       </div>
-    </ng-template>
+    </div>
 
     <ng-template #noPeriodes>
       <h2>Aucune périodes disponible</h2>

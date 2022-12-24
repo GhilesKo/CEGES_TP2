@@ -11,9 +11,10 @@ export class PeriodesDialogComponent implements OnInit {
 
 
   pickedPeriode?: Periode;
-
+  hasPeriodes?:boolean;
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<PeriodesDialogComponent>,) {
-    console.log(data)
+    // console.log(data)
+    this.hasPeriodes = Object.keys(this.data.periodes).length ? true : false
   }
 
   ngOnInit() { }

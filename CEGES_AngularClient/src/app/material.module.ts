@@ -10,8 +10,11 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-
 import {MatDividerModule} from '@angular/material/divider';
+
+import {MatTableModule} from '@angular/material/table';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatSortModule} from '@angular/material/sort';
 const modules = [
   MatCardModule,
   MatInputModule,
@@ -22,7 +25,10 @@ const modules = [
   MatDialogModule,
   MatProgressSpinnerModule,
   MatSlideToggleModule,
-  MatDividerModule
+  MatDividerModule,
+  MatTableModule,
+  MatPaginatorModule,
+  MatSortModule
 ];
 
 @NgModule({

@@ -21,9 +21,9 @@ img {
 
 .content {
     /* background-color: red; */
-    display: flex;
+    /* display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
     /* will change over time */
     height: calc(100vh - 445.69px); 
 

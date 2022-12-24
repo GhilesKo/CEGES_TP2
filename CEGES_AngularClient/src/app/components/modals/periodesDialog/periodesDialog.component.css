@@ -2,14 +2,7 @@ button {
   margin-right: 8px;
 }
 
-.aaa {
-  display: flex !important;
-
+.row{
+  display: grid ;
+  grid-template-columns: repeat(3,1fr);
 }
-
-.aa{
-  width: 50px;
-  height: 50px;
-  background-color: red;
-}
-
