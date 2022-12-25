@@ -69,7 +69,7 @@ namespace CEGES_MVC.Areas.Analyse.Controllers
 			return View(vm);
 		}
 
-
+		//Lorsque clique sur une date non existante, 
 		[Authorize(Roles = AppConstants.AnalysteRole)]
 		public async Task<IActionResult> Insert(int entrepriseId, DateTime periodeDebut)
 		{

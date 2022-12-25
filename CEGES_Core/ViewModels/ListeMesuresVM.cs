@@ -13,6 +13,6 @@ namespace CEGES_Core.ViewModels
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime PeriodeDebut { get; set; }
-        public List<DetailMesureVM> Mesures { get; set; }
+        public List<DetailMesureVM> Mesures { get; set; } = new();
     }
 }

@@ -16,22 +16,24 @@ namespace CEGES_MVC.Areas.Configuration.Controllers
     [Authorize(Roles = AppConstants.IngenieurRole)]
     public class EntrepriseController : Controller
     {
-        private readonly ICegesServices _services;
+        private readonly IConfigurationServices _configService;
+        private readonly IAnalyseServices _analyseService;
 
-        public EntrepriseController(ICegesServices services)
-        {
-            _services = services;
-        }
+		public EntrepriseController(IConfigurationServices configService, IAnalyseServices analyseService)
+		{
+			_configService = configService;
+			_analyseService = analyseService;
+		}
 
-        public IActionResult Index()
+		public IActionResult Index()
         {
-            List<ListeEntreprisesVM> vm = _services.Configuration.GetEntreprisesAndCountsAsync();
+            List<ListeEntreprisesVM> vm = _configService.GetEntreprisesAndCountsAsync();
             return View(vm);
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            DetailEntrepriseVM vm = await _services.Configuration.GetEntrepriseDetailAsync(id);
+            DetailEntrepriseVM vm = await _configService.GetEntrepriseDetailAsync(id);
 
             if (vm.Entreprise == null)
             {
@@ -40,6 +42,7 @@ namespace CEGES_MVC.Areas.Configuration.Controllers
             return View(vm);
         }
 
+        // MODIFIER VIEW , NOM ET SELECT LES ANALYSTES
         public async Task<IActionResult> Upsert(int? id)
         {
             UpsertEntrepriseVM vm = new UpsertEntrepriseVM();
@@ -49,9 +52,9 @@ namespace CEGES_MVC.Areas.Configuration.Controllers
             } 
             else
             {
-                vm.Entreprise = await _services.Configuration.GetEntrepriseAsync(id.GetValueOrDefault());
+                vm.Entreprise = await _configService.GetEntrepriseAsync(id.GetValueOrDefault());
             }
-            IEnumerable<ApplicationUser> users = await _services.Analyse.GetAnalystesListAsync();
+            IEnumerable<ApplicationUser> users = await _analyseService.GetAnalystesListAsync();
 
             vm.Analystes = users.Select(u => new SelectListItem(u.NormalizedUserName, u.Id, vm.Entreprise.Analystes.Exists(a => a.Id == u.Id))).ToList();
 
@@ -70,11 +73,12 @@ namespace CEGES_MVC.Areas.Configuration.Controllers
             {
                 if (entrepriseVM.Entreprise.Id == 0)
                 {
-                    await _services.Configuration.AddEntrepriseAsync(entrepriseVM.Entreprise);
+                    await _configService.AddEntrepriseAsync(entrepriseVM.Entreprise);
+
                 }
                 else
                 {
-                    _services.Configuration.UpdateEntreprise(entrepriseVM.Entreprise);
+                    _configService.UpdateEntreprise(entrepriseVM.Entreprise);
                 }
                 if (entrepriseVM.SelectAnalystes.Count > 3)
                 {
@@ -83,7 +87,7 @@ namespace CEGES_MVC.Areas.Configuration.Controllers
                 }
                 try
                 {
-                    await _services.Configuration.EditAnalystesEntrepriseAsync(entrepriseVM.Entreprise.Id, entrepriseVM.SelectAnalystes);
+                    await _configService.EditAnalystesEntrepriseAsync(entrepriseVM.Entreprise.Id, entrepriseVM.SelectAnalystes);
                 }
                 catch (Exception)
                 {

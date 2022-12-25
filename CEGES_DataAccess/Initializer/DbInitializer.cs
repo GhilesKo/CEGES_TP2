@@ -66,13 +66,6 @@ namespace CEGES_DataAccess.Initializer
             _userManager.AddToRoleAsync(user, AppConstants.IngenieurRole).GetAwaiter().GetResult();
 
 
-
-
-
-
-
-
-
             _userManager.CreateAsync(new ApplicationUser
             {
                 UserName = "AnalystePizzaPizza@Ceges.ca",
@@ -99,7 +92,23 @@ namespace CEGES_DataAccess.Initializer
 
             ApplicationUser user3 = _db.ApplicationUsers.FirstOrDefault(u => u.Email == "AnalysteAluminiumQc@Ceges.ca");
             _userManager.AddToRoleAsync(user3, AppConstants.AnalysteRole).GetAwaiter().GetResult();
-        }
+
+
+
+
+			_userManager.CreateAsync(new ApplicationUser
+			{
+				UserName = "AnalysteTest@Ceges.ca",
+				Email = "AnalysteTest@Ceges.ca",
+				EmailConfirmed = true,
+				PhoneNumber = "111111111111"
+			}, "Ceges1234*")
+			   .GetAwaiter()
+			   .GetResult();
+
+			ApplicationUser user4 = _db.ApplicationUsers.FirstOrDefault(u => u.Email == "AnalysteTest@Ceges.ca");
+			_userManager.AddToRoleAsync(user4, AppConstants.AnalysteRole).GetAwaiter().GetResult();
+		}
 
 
     }

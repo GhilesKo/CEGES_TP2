@@ -25,6 +25,9 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICegesServices, CegesServices>();
+builder.Services.AddScoped<IConfigurationServices, ConfigurationServices>();
+builder.Services.AddScoped<IAnalyseServices, AnalyseServices>();
+
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 			   .AddDefaultTokenProviders()
