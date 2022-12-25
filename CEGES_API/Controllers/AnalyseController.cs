@@ -87,7 +87,7 @@ namespace CEGES_API.Controllers
 
 
 
-			if (avecVariation && !string.IsNullOrEmpty(dateOption))
+		if (avecVariation && !string.IsNullOrEmpty(dateOption))
 			{
 				var sommaireAvecVariation = await _services.Analyse.GetEntrepriseStatistiquesSommaireAvecVariations(entrepriseId, periodeId, dateOption);
 
@@ -141,6 +141,26 @@ namespace CEGES_API.Controllers
 
 
 			return Ok(periodesVM.ToList());
+		}
+
+		[HttpGet("entreprises/{entrepriseId}")]
+		public async Task<IActionResult> GetEntrepriseInfo(int entrepriseId)
+		{
+
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			////Check if analyste has access to that entreprise
+			//var entreprisesAnalyste = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId).Select(e => e.Id);
+			//if (!entreprisesAnalyste.Any(c => c == entrepriseId))
+			//{
+			//	return Unauthorized();
+			//}
+
+			//Seulement besoin du nom, mais sinon jaurais creer un service me retournant la vm desiré, mais pour simplicité, retourne le nom seulement
+
+			var entreprise = await _services.Configuration.GetEntrepriseAsync(entrepriseId);
+				
+			return Ok(new { entreprise.Id,entreprise.Nom});
 		}
 
 	}

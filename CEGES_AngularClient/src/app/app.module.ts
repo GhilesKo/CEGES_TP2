@@ -21,6 +21,7 @@ import { DetailsComponent } from './components/details/details.component';
 import { PeriodesDialogComponent } from './components/modals/periodesDialog/periodesDialog.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { ErrorDialogComponent } from './components/modals/errorDialog/errorDialog.component';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     SummaryComponent,
     DetailsComponent,
     PeriodesDialogComponent,
+    ErrorDialogComponent,
     UnauthorizedComponent,
   ], 
   imports: [

@@ -51,6 +51,7 @@ namespace CEGES_API.Controllers
 					new Claim(ClaimTypes.NameIdentifier, user.Id),
 					new Claim(ClaimTypes.Name, user.Email),
 					new Claim(ClaimTypes.Email, user.Email),
+
 					new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
 				};
 

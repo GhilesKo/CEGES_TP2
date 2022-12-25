@@ -1,11 +1,12 @@
 <header class="">
   <img class="" [src]="'https://t4.ftcdn.net/jpg/04/70/29/97/360_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg'"
     alt="image" />
-  <h1>Hydro-Quebec</h1>
+  <h1>{{entreprise?.nom}}</h1>
 </header>
 
 
 <mat-tab-group preserveContent>
+
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">incomplete_circle</mat-icon>
@@ -15,27 +16,29 @@
     <!-- Tab Content -->
     <div class="content">
       <ng-container *ngIf="periodes; else notLoaded">
-        <app-summary [entrepriseId]="entrepriseId" [periodes]="periodes"></app-summary>
+        <app-summary [entreprise]="entreprise" [periodes]="periodes"></app-summary>
       </ng-container>
     </div>
 
   </mat-tab>
 
 
-  <!-- <mat-tab>
+  <mat-tab>
     <div class="content">
       <ng-template mat-tab-label>
         <mat-icon class="example-tab-icon">table_row</mat-icon>
         Statistiques détaillées
       </ng-template>
 
-      Tab Content
+      <!-- Tab Content  -->
       <ng-container *ngIf="periodes; else notLoaded">
-        <app-details [entrepriseId]="entrepriseId" [periodes]="periodes"></app-details>
+        <app-details [entreprise]="entreprise" [periodes]="periodes"></app-details>
       </ng-container>
     </div>
 
-  </mat-tab> -->
+  </mat-tab>
+
+  
 </mat-tab-group>
 
 <ng-template #notLoaded>

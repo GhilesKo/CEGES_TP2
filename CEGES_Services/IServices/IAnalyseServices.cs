@@ -14,6 +14,8 @@ namespace CEGES_Services.IServices
 		public Task<List<DetailMesureVM>> GetMesuresAsync(int entrepriseId, int periodeId);
 		public Task<Dictionary<int, List<Periode>>> GetPeriodesEtAnnees(int id);
 		public Task<IEnumerable<PeriodeVM>> GetListePeriodes(int id);
+
+
 		public Task<int> PeriodeJoursAsync(int periodeId);
 		public Task<ListeMesuresVM> GetPeriodeDetails(int entrepriseId, int periodeId);
 		public Task<ListeMesuresVM> NewPeriodeAsync(int entrepriseId, DateTime periodeDebut);

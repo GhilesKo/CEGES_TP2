@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Observer, Subscription } from 'rxjs';
-import Entreprise from 'src/app/dtos/requests/Entreprise';
 import Periode from 'src/app/dtos/responses/Periode';
 import { DataService } from 'src/app/services/data.service';
 import { lastValueFrom } from 'rxjs';
+import Entreprise from 'src/app/dtos/requests/Entreprise';
 @Component({
   selector: 'app-entreprise',
   templateUrl: './entreprise.component.html',
@@ -14,8 +14,7 @@ export class EntrepriseComponent implements OnInit {
 
   private routeSub?: Subscription;
 
-  public entrepriseId?: number;
-
+  public entreprise?: Entreprise;
   periodes?: Record<string, Periode[]>
 
 
@@ -24,19 +23,34 @@ export class EntrepriseComponent implements OnInit {
   ngOnInit() {
     this.routeSub = this.route.params.subscribe(
       params => {
-        this.entrepriseId = params['id'];
+
+        setTimeout(() => {
+            this.fetchEntrepriseInfo(params['id'])
+            this.fetchPeriodes(params['id'])
+        }, 0);
+
       },);
 
-    setTimeout(() => {
-      this.fetchPeriodes()
-    }, 0);
+
 
   }
 
-  private fetchPeriodes() {
-    if (!this.entrepriseId) return
-    this.dataService.getPeriodes(this.entrepriseId).subscribe(
-      res => this.periodes = this.groupBy(res, i => i.nom.split(' ')[1]),
+  private fetchEntrepriseInfo(entrepriseId: number) {
+    if (!entrepriseId) return
+    this.dataService.getEntrepriseInfo(entrepriseId).subscribe(
+      res => {
+        this.entreprise = res;
+      },
+      err => console.log(err),
+      () => console.log()
+    )
+  }
+  private fetchPeriodes(entrepriseId: number) {
+    if (!entrepriseId) return
+    this.dataService.getPeriodes(entrepriseId).subscribe(
+      res => {
+        this.periodes = this.groupBy(res, i => i.nom.split(' ')[1]);
+      },
       err => console.log(err),
       () => console.log()
     )
@@ -48,7 +62,7 @@ export class EntrepriseComponent implements OnInit {
       return groups;
     }, {} as Record<K, T[]>);
 
-    
+
   private ngOnDestroy() {
     this.routeSub?.unsubscribe();
   }

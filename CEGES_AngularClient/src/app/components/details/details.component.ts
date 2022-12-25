@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { lastValueFrom, Subject } from 'rxjs';
 import Equipement from 'src/app/dtos/responses/Equipement';
 import Periode from 'src/app/dtos/responses/Periode';
@@ -8,22 +8,22 @@ import { DialogService } from 'src/app/services/dialog.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import Entreprise from 'src/app/dtos/requests/Entreprise';
 @Component({
   selector: 'app-details',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css']
 })
-export class DetailsComponent implements OnInit, AfterViewInit {
+export class DetailsComponent implements OnInit {
   @Input() periodes?: Record<string, Periode[]>
-  @Input() entrepriseId?: number;
-
+  @Input() entreprise?: Entreprise;
 
   avecVariation = false;
   periode?: Periode;
   periodeAnterieur?: Periode;
 
-  // equipements: Equipement[] = [];
-  // constructor(public nom: string, public periodeId: number, public groupe: string, public type: string, public emission: number) {
+  vartiationOptions: any[] = [{ value: 'same', text: 'mois précédent', }, { value: 'last', text: 'même mois de l’année précédente' }]
+  selectedOption: string = 'same';
 
   displayedColumns: string[] = ['nom', 'groupe', 'type', 'emission', 'pourcentage'];
   dataSource?: MatTableDataSource<any>;
@@ -31,15 +31,9 @@ export class DetailsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
 
-
   constructor(private dataService: DataService, private dialogService: DialogService) { }
 
-  ngOnInit() { }
-  ngAfterViewInit(): void {
-
-  }
-
-
+  ngOnInit() {}
 
 
   applyFilter(event: Event) {
@@ -52,57 +46,27 @@ export class DetailsComponent implements OnInit, AfterViewInit {
   }
 
 
-  fetchStatistiqueDetails() {
+  fetchStatistiqueDetails(selectedPeriode: Periode) {
+    this.dataService.getStatistiqueDetails(this.entreprise?.id!, selectedPeriode.id, this.avecVariation, this.selectedOption).subscribe(
+      (data) => {
+      
+        // Assign the data to the data source for the table to render
+        this.dataSource = new MatTableDataSource(data.equipements);
+        this.dataSource!.paginator = this.paginator!;
+        this.dataSource!.sort = this.sort!;
+      },
+      err => console.log(err),
+      () => console.log('details completed')
 
-    if (!this.avecVariation) {  
-      if (this.periode) {
-        this.dataService.getStatistiqueDetails(this.entrepriseId!, this.periode?.id, this.avecVariation).subscribe(
-          (data:any) => {
-            const total = data.emissionTotal;
-            const mappedEquipements = data.equipements.map((e: Equipement) => {
-              const pourcentage = e.emission / total * 100
-              const equipement = {
-                ...e,
-                pourcentage: pourcentage.toFixed(2)
-              }
-              return equipement
-            })
-
-            // console.log(this.equipements)
-            // Assign the data to the data source for the table to render
-            this.dataSource = new MatTableDataSource(mappedEquipements);
-            this.dataSource!.paginator = this.paginator!;
-            this.dataSource!.sort = this.sort!;
-          },
-          err => console.log(err),
-          () => console.log('details completed')
-
-        )
-      }
-      return;
-
-    }
-
-
-    if (this.periode && this.periodeAnterieur) {
-      this.dataService.getStatistiqueSommaire(this.entrepriseId!, this.periode.id, this.avecVariation, 'same').subscribe(
-        res => console.log(res),
-        err => console.log(err),
-        () => console.log(),
-      )
-    }
+    )
 
   }
 
   openDialog() {
-
-    const callback = (pickedPeriode: any) => {
-      this.periode = pickedPeriode;
-      this.fetchStatistiqueDetails()
+    const callback = (selectedPeriode: any) => {
+      this.fetchStatistiqueDetails(selectedPeriode)
     }
-
     this.dialogService.openPeriodesDialog(this.periodes!, this.avecVariation, callback);
-
   }
 
 

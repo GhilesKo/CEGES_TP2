@@ -8,7 +8,6 @@ namespace CEGES_Core.DTOs
 {
 	public class EquipementDetails
 	{
-		public int Id { get; set; }
 		public string Nom { get; set; }
 		public string Groupe { get; set; }
 

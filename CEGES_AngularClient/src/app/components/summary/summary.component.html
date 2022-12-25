@@ -9,17 +9,42 @@
     <button class="me-3" mat-raised-button color="primary" (click)="openDialog()">Choisir une période</button>
     <mat-slide-toggle [(ngModel)]="avecVariation" color="primary" aria-label="Variations">Avec
       variations</mat-slide-toggle>
-      <mat-radio-group *ngIf="avecVariation" aria-labelledby="example-radio-group-label" class="example-radio-group" [(ngModel)]="selectedOption">
-        <mat-radio-button  class="example-radio-button" *ngFor="let option of vartiationOptions" [value]="option.value">
-          {{option.text}}
-        </mat-radio-button>
-      </mat-radio-group>
+    <mat-radio-group *ngIf="avecVariation" aria-labelledby="example-radio-group-label" class="example-radio-group"
+      [(ngModel)]="selectedOption">
+      <mat-radio-button class="example-radio-button" *ngFor="let option of vartiationOptions" [value]="option.value">
+        {{option.text}}
+      </mat-radio-button>
+    </mat-radio-group>
   </div>
 
 
 
   <!-- PIE CHART FOR SUMMARY -->
   <div id="chart" *ngIf="chartOptions">
+
+    <div *ngIf="variation;else sansVariation" class="d-flex align-items-center p-3">
+      <h5 class="me-3">Total des émissions <b>{{total}} t</b></h5>
+
+
+      <div [ngSwitch]="variation.type" class="d-flex align-items-center">
+        <div *ngSwitchCase="'increase'">
+          <div class="text-danger d-flex align-items-center"><mat-icon>arrow_upward</mat-icon> +{{(variation!.value).toFixed(2)}}t   {{(variation!.pourcentage).toFixed(2)}}%</div>
+        </div>
+        <div *ngSwitchCase="'decrease'">
+          <span class="text-success d-flex align-items-center"><mat-icon>south</mat-icon> {{(variation!.value).toFixed(2)}}t   {{(variation!.pourcentage).toFixed(2)}}%</span>
+        </div>
+        <div *ngSwitchCase="'even'">
+          <span class="text-muted d-flex align-items-center"><mat-icon>compare_arrows</mat-icon> {{(variation!.value).toFixed(2)}}t    {{(variation!.pourcentage).toFixed(2)}}%</span>
+        </div>
+        <div *ngSwitchDefault></div>
+      </div>
+
+    </div>
+
+    <ng-template #sansVariation>
+      <h5>Total des émissions <b>{{total}} t</b></h5>
+    </ng-template>
+
     <apx-chart [series]="chartOptions.series!" [chart]="chartOptions.chart!" [labels]="chartOptions.labels"></apx-chart>
   </div>
 

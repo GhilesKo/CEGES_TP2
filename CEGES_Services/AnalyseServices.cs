@@ -44,8 +44,11 @@ namespace CEGES_Services
 
 			var vm = periodes.SelectMany(p => p.Value).Where(p => p.Mesures.Any());
 
+			var entreprise = vm.FirstOrDefault().Entreprise;
+
 			var vm2 = vm.Select(p => new PeriodeVM
 			{
+				Entreprise = entreprise.Nom,
 				Id = p.Id,
 				Nom = p.Nom,
 				Debut = p.Debut,
@@ -105,7 +108,7 @@ namespace CEGES_Services
 
 		public async Task<Dictionary<int, List<Periode>>> GetPeriodesEtAnnees(int id)
 		{
-			IEnumerable<Periode> periodes = await _uow.Periodes.GetAllAsync(p => p.EntrepriseId == id, q => q.OrderBy(p => p.Debut), isTracking: false, includeProperties: "Mesures.Equipement.Groupe");
+			IEnumerable<Periode> periodes = await _uow.Periodes.GetAllAsync(p => p.EntrepriseId == id, q => q.OrderBy(p => p.Debut), isTracking: false, includeProperties: "Mesures.Equipement.Groupe,Entreprise");
 			Dictionary<int, List<Periode>> py = new Dictionary<int, List<Periode>>();
 			foreach (Periode p in periodes)
 			{
@@ -293,6 +296,11 @@ namespace CEGES_Services
 		{
 			var details = await _uow.Entreprises.GetEntrepriseStatistiquesDetails(entrepriseId, periodeId);
 
+
+			details.Equipements.All(x => { x.Pourcentage = x.Emission / details.Total; return true; });
+
+
+
 			return details;
 		}
 
@@ -334,7 +342,7 @@ namespace CEGES_Services
 				TotalPeriodeAnterieure = TotalPeriodeAnterieure,
 				Equipements = periode.Mesures.Select(m => new EquipementDetails
 				{
-					Id = m.EquipementId,
+					//Id = m.EquipementId,
 					Nom = m.Equipement.Nom,
 					Groupe = m.Equipement.Groupe.Nom,
 					Type = m.Equipement.Type.GetDisplayName(),

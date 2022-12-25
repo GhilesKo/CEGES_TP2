@@ -4,6 +4,7 @@ const PROXY_CONFIG = [
       "/auth/*",
       "/analyse/*",
       "/analyse/periodes/*",
+      "/analyse/entreprises/*",
     ],
     target: "https://localhost:7218",
     secure: false

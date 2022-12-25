@@ -133,7 +133,9 @@ namespace CEGES_DataAccess.Repository
 							Groupe = m.Equipement.Groupe.Nom,
 							Type = m.Equipement.Type.GetDisplayName(),
 							Emission = m.Valeur,
-						})
+							//Here i would like to use the total from up there to not have to re calculate everytime
+							//Pourcentage = Total //<--- this causes an error  "The name 'Total' does not exist in the current context"
+						}).ToList()
 
 
 				})

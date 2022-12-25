@@ -1,6 +1,6 @@
 import EquipementDetails from "./EquipementDetails";
 
-export default class EquipementDetailsAvecVariation {
+export default class EntrepriseDetailsAvecVariation {
     constructor(
         public nom: string,
         public total: string,
