@@ -10,11 +10,12 @@ import { EMPTY, Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { DialogService } from '../services/dialog.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router,private dialogService:DialogService) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
@@ -35,7 +36,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             // redirect to the login page
             this.router.navigate(['/403'])
           }
-          //console.error(`Backend returned code ${err.status}, body was: ${err.error}`);
+          // console.error(`Backend returned code ${err.status}, body was: ${err.error}`);
         }
 
 

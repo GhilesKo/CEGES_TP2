@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CEGES_Core.DTOs
 {
-	public class EquipementDetails
+	public class EquipementDetailsVM
 	{
 		public string Nom { get; set; }
 		public string Groupe { get; set; }

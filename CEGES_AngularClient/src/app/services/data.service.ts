@@ -5,7 +5,7 @@ import EntrepriseDetails from '../dtos/responses/EntrepriseDetails';
 import EntrepriseSommaire from '../dtos/responses/EntrepriseSommaire';
 import EntrepriseSommaireAvecVariations from '../dtos/responses/EntrepriseSommaireAvecVariations';
 import Equipement from '../dtos/responses/Equipement';
-import EntrepriseDetailsAvecVariation from '../dtos/responses/EquipementDetailsAvecVariation';
+import EntrepriseDetailsAvecVariation from '../dtos/responses/EntrepriseDetailsAvecVariation';
 import Periode from '../dtos/responses/Periode';
 
 @Injectable({
@@ -41,7 +41,7 @@ export class DataService {
   }
 
   getStatistiqueDetails(entrepriseId: number, periodeId: number, variation: boolean, dateOptions: string) {
-    return this.http.get<EntrepriseDetails | EntrepriseDetailsAvecVariation>('/analyse/details', {
+    return this.http.get<EntrepriseDetailsAvecVariation>('/analyse/details', {
       params: {
         entrepriseId: entrepriseId,
         periodeId: periodeId,

@@ -1,5 +1,4 @@
 ﻿using CEGES_Core;
-using CEGES_Core.DomainModels;
 using CEGES_Core.DTOs;
 using CEGES_Core.IRepository;
 using CEGES_Core.ViewModels;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CEGES_DataAccess.Repository
 {
-	public class EntrepriseRepository : RepositoryAsync<Entreprise>, IEntrepriseRepository
+    public class EntrepriseRepository : RepositoryAsync<Entreprise>, IEntrepriseRepository
 	{
 		private readonly CegesDbContext _db;
 
@@ -63,17 +62,18 @@ namespace CEGES_DataAccess.Repository
 			return user.EntreprisesVMs;
 		}
 
-		public async Task<EntrepriseSommaire> GetEntrepriseStatistiquesSommaire(int entrepriseId, int periodeId)
+		public async Task<EntrepriseSommaireVM> GetEntrepriseStatistiquesSommaire(int entrepriseId, int periodeId)
 		{
 			return await _db.Entreprises
+				// Pas besoin de track l'entité, nous effectuons pas de changements
 				.AsNoTracking()
 				.Where(e => e.Id == entrepriseId)
-				.Select(e => new EntrepriseSommaire
+				.Select(e => new EntrepriseSommaireVM
 				{
 
 					Nom = e.Nom,
 					Total = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId).Select(m => m.Valeur).Sum(),
-					Groupes = e.Groupes.Take(10).Select(g => new GroupeSommaire
+					Groupes = e.Groupes.Take(10).Select(g => new GroupeSommaireVM
 					{
 						//Id = g.Id,
 						Nom = g.Nom,
@@ -82,42 +82,14 @@ namespace CEGES_DataAccess.Repository
 				})
 				.FirstOrDefaultAsync();
 
-		}
-		public async Task<EntrepriseSommaireAvecVariation> GetEntrepriseStatistiquesSommaireAvecVariations(int entrepriseId, int periodeId, int periodeId2)
-		{
-			var test = await _db.Entreprises
-				.AsNoTracking()
-				.Where(e => e.Id == entrepriseId)
-				.Select(e => new EntrepriseSommaireAvecVariation
-				{
-					Nom = e.Nom,
-					EmissionsTotal = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures)
-					.Where(m => m.PeriodeId == periodeId || m.PeriodeId == periodeId2)
-					.GroupBy(m => m.PeriodeId)
-					.Select(gr => new EmissionTotal
-					{
-						PeriodeId = gr.Key,
-						Total = gr.Sum(x => x.Valeur)
-					}),
-					Groupes = e.Groupes.Take(10).Select(g => new GroupeSommaire
-					{
-						//Id = g.Id,
-						Nom = g.Nom,
-						Total = g.Equipements.SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId).Select(m => m.Valeur).Sum()
-					})
-				})
-				.FirstOrDefaultAsync();
-			return test;
-			//return new EntrepriseSommaireAvecVariation();
 		}
 
 		public async Task<EntrepriseDetailsVM> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId)
 		{
 			return await _db.Entreprises
+				// Pas besoin de track l'entité, nous effectuons pas de changements
 				.AsNoTracking()
-				//.Include(e => e.Groupes)
-				//.ThenInclude(g => g.Equipements)
-				//.ThenInclude(e => e.Mesures)
+				// Pas besoin d'inclued, nous somme dans la base de donne
 				.Where(e => e.Id == entrepriseId)
 				.Select(e => new EntrepriseDetailsVM
 				{
@@ -127,13 +99,15 @@ namespace CEGES_DataAccess.Repository
 						.SelectMany(g => g.Equipements)
 						.SelectMany(e => e.Mesures)
 						.Where(m => m.PeriodeId == periodeId)
-						.Select(m => new EquipementDetails
+						.Select(m => new EquipementDetailsVM
 						{
 							Nom = m.Equipement.Nom,
 							Groupe = m.Equipement.Groupe.Nom,
 							Type = m.Equipement.Type.GetDisplayName(),
 							Emission = m.Valeur,
 							//Here i would like to use the total from up there to not have to re calculate everytime
+							//This would cause performance issue..
+							//e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId).Select(m => m.Valeur).Sum()
 							//Pourcentage = Total //<--- this causes an error  "The name 'Total' does not exist in the current context"
 						}).ToList()
 
@@ -143,49 +117,6 @@ namespace CEGES_DataAccess.Repository
 
 		}
 
-		public async Task<EntrepriseDetailsAvecVariation> GetEntrepriseStatistiquesDetailsAvecVariations(int entrepriseId, int periodeId, int periodeId2)
-		{
-			var test = await _db.Entreprises
-				.AsNoTracking()
-				.Where(e => e.Id == entrepriseId)
-				.Select(e => new EntrepriseDetailsAvecVariation
-				{
-					Nom = e.Nom,
-					EmissionsTotal = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures)
-					.Where(m => m.PeriodeId == periodeId || m.PeriodeId == periodeId2)
-					.GroupBy(m => m.PeriodeId)
-					.Select(gr => new EmissionTotal
-					{
-						PeriodeId = gr.Key,
-						Total = gr.Sum(x => x.Valeur)
-					}),
-
-					//EmissionTotalAnterieur = e.Groupes.SelectMany(g => g.Equipements).SelectMany(e => e.Mesures).Where(m => m.PeriodeId == periodeId2).Select(m => m.Valeur).Sum(),
-
-					Equipements = e.Groupes
-						.SelectMany(g => g.Equipements)
-						.SelectMany(e => e.Mesures)
-						.Where(m => m.PeriodeId == periodeId || m.PeriodeId == periodeId2)
-						//.GroupBy(m => m.PeriodeId)
-						.Select(m => new EquipementDetails
-						{
-							//PeriodeId = m.PeriodeId,
-							Nom = m.Equipement.Nom,
-							Groupe = m.Equipement.Groupe.Nom,
-							Type = m.Equipement.Type.GetDisplayName(),
-							Emission = m.Valeur,
-						})
-
-				})
-				.FirstOrDefaultAsync();
-
-
-
-			return test;
-
-
-
-		}
 
 
 	}

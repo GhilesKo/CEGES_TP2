@@ -12,5 +12,10 @@ table {
 
 td,
 th {
-  width: 25%;
+  padding: 0.5rem;
+  min-width: 25%;
+}
+
+span{
+  margin-right: 10px;
 }

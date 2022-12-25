@@ -1,6 +1,4 @@
 ﻿using CEGES_Core;
-using CEGES_Core.DomainModels;
-using CEGES_Core.DTOs;
 using CEGES_Core.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -8,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CEGES_Services.IServices
 {
-	public interface IAnalyseServices
+    public interface IAnalyseServices
 	{
 		public  Task<ListePeriodesVM> GetListePeriodesOriginal(int id);
 		public Task<List<DetailMesureVM>> GetMesuresAsync(int entrepriseId, int periodeId);
@@ -22,7 +20,7 @@ namespace CEGES_Services.IServices
 		public Task<Periode> UpsertPeriodeAsync(ListeMesuresVM vm);
 		public Task<IEnumerable<ApplicationUser>> GetAnalystesListAsync();
 
-		public Task<EntrepriseSommaire> GetEntrepriseStatistiquesSommaire(int entrepriseId, int periodeId);
+		public Task<EntrepriseSommaireVM> GetEntrepriseStatistiquesSommaire(int entrepriseId, int periodeId);
 		public Task<EntrepriseSommaireAvecVariationVM> GetEntrepriseStatistiquesSommaireAvecVariations(int entrepriseId, int periodeId, string dateOption);
 
 		public Task<EntrepriseDetailsVM> GetEntrepriseStatistiquesDetails(int entrepriseId, int periodeId);

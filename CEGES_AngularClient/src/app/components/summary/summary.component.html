@@ -34,7 +34,7 @@
           <span class="text-success d-flex align-items-center"><mat-icon>south</mat-icon> {{(variation!.value).toFixed(2)}}t   {{(variation!.pourcentage).toFixed(2)}}%</span>
         </div>
         <div *ngSwitchCase="'even'">
-          <span class="text-muted d-flex align-items-center"><mat-icon>compare_arrows</mat-icon> {{(variation!.value).toFixed(2)}}t    {{(variation!.pourcentage).toFixed(2)}}%</span>
+          <span class="text-muted d-flex align-items-center"><mat-icon>compare_arrows</mat-icon> <span>0.00</span>   <span> 0.0%</span></span>
         </div>
         <div *ngSwitchDefault></div>
       </div>

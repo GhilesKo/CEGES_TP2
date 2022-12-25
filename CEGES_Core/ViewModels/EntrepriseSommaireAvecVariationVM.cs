@@ -1,5 +1,4 @@
-﻿using CEGES_Core.DTOs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CEGES_Core.ViewModels
 {
-	public class EntrepriseSommaireAvecVariationVM
+    public class EntrepriseSommaireAvecVariationVM
 	{
 		public string Nom { get; init; }
 
@@ -15,6 +14,6 @@ namespace CEGES_Core.ViewModels
 
 		public decimal TotalPeriodeAnterieure { get; set; }
 
-		public IEnumerable<GroupeSommaire> Groupes { get; set; }
+		public IEnumerable<GroupeSommaireVM> Groupes { get; set; }
 	}
 }

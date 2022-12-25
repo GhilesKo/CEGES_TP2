@@ -15,6 +15,6 @@ namespace CEGES_Core.ViewModels
 
 		public decimal TotalPeriodeAnterieure { get; set; }
 
-		public IEnumerable<EquipementDetails> Equipements { get; set; }
+		public IEnumerable<EquipementDetailsVM> Equipements { get; set; }
 	}
 }

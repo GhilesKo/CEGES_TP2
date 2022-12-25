@@ -26,30 +26,28 @@ namespace CEGES_API.Controllers
 
 
 		[HttpGet("entreprises")]
-		public async Task<IActionResult> AnalysteEntreprisesAndCount()
+		public IActionResult AnalysteEntreprisesAndCount()
 		{
 
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-
-			var user = await _userManager.GetUserAsync(User);
+			//var user = await _userManager.GetUserAsync(User);
 
 			List<ListeEntreprisesVM> vm;
 
 			//check if user is an ANALYSTE
-			if (await _userManager.IsInRoleAsync(user, AppConstants.AnalysteRole))
-			{
-
-				//return only the entreprises he belongs 
-				vm = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId);
-				return Ok(vm);
-
-			}
-
-			//user is a INGENIEUR, returns all entreprises
-			vm = _services.Configuration.GetEntreprisesAndCountsAsync();
-
+			//if (await _userManager.IsInRoleAsync(user, AppConstants.AnalysteRole))
+			//{}
+			//return only the entreprises he belongs to
+			vm = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId);
 			return Ok(vm);
+
+
+
+			////user is a INGENIEUR, returns all entreprises
+			//vm = _services.Configuration.GetEntreprisesAndCountsAsync();
+
+			//return Ok(vm);
 		}
 
 
@@ -59,35 +57,14 @@ namespace CEGES_API.Controllers
 
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			////Check if analyste has access to that entreprise
-			//var entreprisesAnalyste = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId).Select(e => e.Id);
-			//if (!entreprisesAnalyste.Any(c => c == entrepriseId))
-			//{
-			//	return Unauthorized();
-			//}
+			//Check if analyste has access to that entreprise
+			var entreprisesAnalyste = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId).Select(e => e.Id);
+			if (!entreprisesAnalyste.Any(c => c == entrepriseId))
+			{
+				return Unauthorized();
+			}
 
-
-			//var periodes = await _services.Analyse.GetListePeriodesOriginal(entrepriseId);
-
-			////Liste mesures d'UNE ENTREPRISE at UNE PERIODE Donnee
-			//var mesure = periodes.Periodes.SelectMany(p => p.Value).FirstOrDefault(p => p.Id == periodeId).Mesures.ToList();
-
-			//var dto = new
-			//{
-			//	Total = mesure.Sum(m => m.Valeur),
-			//	Groupes = mesure.GroupBy(m => m.Equipement.Groupe.Nom).Select(o => new
-			//	{
-			//		Nom = o.Key,
-			//		Total = o.Sum(m => m.Valeur)
-			//	})
-
-			//};
-
-
-
-
-
-		if (avecVariation && !string.IsNullOrEmpty(dateOption))
+			if (avecVariation && !string.IsNullOrEmpty(dateOption))
 			{
 				var sommaireAvecVariation = await _services.Analyse.GetEntrepriseStatistiquesSommaireAvecVariations(entrepriseId, periodeId, dateOption);
 
@@ -105,12 +82,12 @@ namespace CEGES_API.Controllers
 
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			////Check if analyste has access to that entreprise
-			//var entreprisesAnalyste = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId).Select(e => e.Id);
-			//if (!entreprisesAnalyste.Any(c => c == entrepriseId))
-			//{
-			//	return Unauthorized();
-			//}
+			//Check if analyste has access to that entreprise
+			var entreprisesAnalyste = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId).Select(e => e.Id);
+			if (!entreprisesAnalyste.Any(c => c == entrepriseId))
+			{
+				return Unauthorized();
+			}
 
 
 			if (avecVariation && !string.IsNullOrEmpty(dateOption))
@@ -130,12 +107,12 @@ namespace CEGES_API.Controllers
 
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			////Check if analyste has access to that entreprise
-			//var entreprisesAnalyste = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId).Select(e => e.Id);
-			//if (!entreprisesAnalyste.Any(c => c == entrepriseId))
-			//{
-			//	return Unauthorized();
-			//}
+			//Check if analyste has access to that entreprise
+			var entreprisesAnalyste = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId).Select(e => e.Id);
+			if (!entreprisesAnalyste.Any(c => c == entrepriseId))
+			{
+				return Unauthorized();
+			}
 
 			var periodesVM = await _services.Analyse.GetListePeriodes(entrepriseId);
 
@@ -149,18 +126,18 @@ namespace CEGES_API.Controllers
 
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			////Check if analyste has access to that entreprise
-			//var entreprisesAnalyste = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId).Select(e => e.Id);
-			//if (!entreprisesAnalyste.Any(c => c == entrepriseId))
-			//{
-			//	return Unauthorized();
-			//}
+			//Check if analyste has access to that entreprise
+			var entreprisesAnalyste = _services.Configuration.GetAnalysteEntreprisesAndCountsAsync(userId).Select(e => e.Id);
+			if (!entreprisesAnalyste.Any(c => c == entrepriseId))
+			{
+				return Unauthorized();
+			}
 
 			//Seulement besoin du nom, mais sinon jaurais creer un service me retournant la vm desiré, mais pour simplicité, retourne le nom seulement
 
 			var entreprise = await _services.Configuration.GetEntrepriseAsync(entrepriseId);
-				
-			return Ok(new { entreprise.Id,entreprise.Nom});
+
+			return Ok(new { entreprise.Id, entreprise.Nom });
 		}
 
 	}

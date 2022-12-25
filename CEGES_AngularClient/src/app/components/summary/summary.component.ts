@@ -12,19 +12,20 @@ import Entreprise from 'src/app/dtos/requests/Entreprise';
 import EntrepriseSommaire from 'src/app/dtos/responses/EntrepriseSommaire';
 import EntrepriseSommaireAvecVariations from 'src/app/dtos/responses/EntrepriseSommaireAvecVariations';
 import GroupeSommaire from 'src/app/dtos/responses/GroupeSommaire';
+import Variation from 'src/app/models/variation';
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.css']
 })
 export class SummaryComponent implements OnInit {
-
   @Input() periodes?: Record<string, Periode[]>
   @Input() entreprise?: Entreprise;
 
+  avecVariation = false;
+
   selectedPeriode?: Periode;
 
-  avecVariation = false;
   vartiationOptions: any[] = [{ value: 'same', text: 'mois précédent', }, { value: 'last', text: 'même mois de l’année précédente' }]
   selectedOption: string = 'same';
 
@@ -34,11 +35,7 @@ export class SummaryComponent implements OnInit {
 
   public total?: number;
 
-  public variation?: {
-    type: string,
-    value: number,
-    pourcentage: number,
-  };
+  public variation?: Variation;
 
   constructor(private dataService: DataService, public dialogService: DialogService) { }
 
@@ -85,13 +82,16 @@ export class SummaryComponent implements OnInit {
         };
 
       },
-      err => { this.dialogService.openErrorDialog(`Aucune periode anterieure à ${selectedPeriode.nom}`) },
-      () => { 'completed' },
+      err => {
+        console.log(err);
+        this.dialogService.openErrorDialog(`Aucune periode anterieure à ${selectedPeriode.nom}`)
+      },
+      () => { 'fetchStatistiqueSommaire completed' },
     )
   }
 
 
-  calculateVariation(original: number, newValue: number): any {
+  calculateVariation(original: number, newValue: number): Variation {
     // % increase = Increase ÷ Original Number × 100.
     console.log(`total: ${original}`, `totalAnterieure: ${newValue}`)
     let type;
@@ -116,11 +116,7 @@ export class SummaryComponent implements OnInit {
 
     }
 
-    return {
-      type: type,
-      value: increase,
-      pourcentage: increasePourcentage,
-    }
+    return new Variation(type, increase, increasePourcentage);
 
 
 

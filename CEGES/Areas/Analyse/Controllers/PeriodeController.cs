@@ -69,6 +69,8 @@ namespace CEGES_MVC.Areas.Analyse.Controllers
 			return View(vm);
 		}
 
+
+		[Authorize(Roles = AppConstants.AnalysteRole)]
 		public async Task<IActionResult> Insert(int entrepriseId, DateTime periodeDebut)
 		{
 			ListeMesuresVM vm = await _services.Analyse.NewPeriodeAsync(entrepriseId, periodeDebut);
@@ -86,6 +88,7 @@ namespace CEGES_MVC.Areas.Analyse.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = AppConstants.AnalysteRole)]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Upsert(ListeMesuresVM vm)
 		{
