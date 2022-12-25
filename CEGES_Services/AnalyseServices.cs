@@ -221,11 +221,11 @@ namespace CEGES_Services
 
 			var vm = periodes.SelectMany(p => p.Value).Where(p => p.Mesures.Any());
 
-			var entreprise = vm.FirstOrDefault().Entreprise;
+			//var entreprise = vm.FirstOrDefault().Entreprise;
 
 			var vm2 = vm.Select(p => new PeriodeVM
 			{
-				Entreprise = entreprise.Nom,
+				//Entreprise = entreprise.Nom,
 				Id = p.Id,
 				Nom = p.Nom,
 				Debut = p.Debut,
