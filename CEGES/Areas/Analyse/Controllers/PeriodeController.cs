@@ -78,7 +78,6 @@ namespace CEGES_MVC.Areas.Analyse.Controllers
 		}
 
 
-
 		//Modifier
 		[Authorize(Roles = AppConstants.AnalysteRole)]
 		public async Task<IActionResult> Update(int entrepriseId, int periodeId)

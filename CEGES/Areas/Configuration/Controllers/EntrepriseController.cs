@@ -19,6 +19,7 @@ namespace CEGES_MVC.Areas.Configuration.Controllers
         private readonly IConfigurationServices _configService;
         private readonly IAnalyseServices _analyseService;
 
+        //Enlevé le wrapper ICegesService, pour faciliter le mocking pour le Testing du controlleur
 		public EntrepriseController(IConfigurationServices configService, IAnalyseServices analyseService)
 		{
 			_configService = configService;

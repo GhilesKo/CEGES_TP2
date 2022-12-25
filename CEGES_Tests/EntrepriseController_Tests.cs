@@ -20,8 +20,11 @@ namespace CEGES_MVC
 		}
 
 
+		//Les tests on été effectués sur la méthode  Upsert_OnTooManyAnalysts_DisplayErrorAsync qui était déja présente dans le projet Test..
+		//Les instructions nous semblait pas trop clair, la partie "Historique" parle d'historique.. d'access et de controlleurs/vue, asns compté
+		//Que le projet Test contenait déja la méthode [Upsert_OnTooManyAnalysts_DisplayErrorAsync] à croire qu'elle est a complétée.
 		[Test]
-		public void Upsert_OnTooManyAnalysts_DisplayErrorAsync()
+		public void Upsert_OnTooManyAnalysts_RedirectUpsertAsync()
 		{
 			//Arrange
 			var _configService = new Mock<IConfigurationServices>();
@@ -46,8 +49,6 @@ namespace CEGES_MVC
 
 			//Assert
 			Assert.AreEqual("Upsert", actionResult.ActionName);
-
-
 
 
 		}

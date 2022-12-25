@@ -1,12 +1,15 @@
-﻿@model ErrorViewModel
+﻿@using CEGES_MVC.Models;
+@model ErrorViewModel
 @{
     ViewData["Title"] = "Error";
 }
-
+@*das*@
 <h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">Une erreur s'est produite lors du traitement de votre demande.</h2>
-
-@*@if (Model.ShowRequestId)
+<h2 class="text-danger">
+    Une erreur s'est produite lors du traitement de votre demande.
+</h2>
+@*
+@if (Model.ShowRequestId)
 {
     <p>
         <strong>Request ID:</strong> <code>@Model.RequestId</code>

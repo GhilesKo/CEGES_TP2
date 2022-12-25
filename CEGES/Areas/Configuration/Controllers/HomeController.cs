@@ -1,6 +1,7 @@
 ﻿using CEGES_MVC.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CEGES_MVC.Controllers
 {
-    [Area("Configuration")]
+	[Area("Configuration")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -21,7 +22,7 @@ namespace CEGES_MVC.Controllers
 
         public IActionResult Index()
         {
-            return View();
+			return View();
         }
 
         public IActionResult Privacy()
@@ -29,7 +30,7 @@ namespace CEGES_MVC.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
